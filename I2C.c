@@ -9,20 +9,20 @@ void i2c_start(void)
 {
 SCL &= ~(1<<4);//вход SCL
 SDA &= ~(1<<5);//вход
-//delay_ms(1);
+delay_ms(22);
 SDA |= (1<<5);//выход
-//delay_ms(1);
+delay_ms(22);
 SCL |= (1<<4);//выход 
 }
 //-------------------------------------------------------
 void i2c_stop (void)
 {
 SDA |= (1<<5);//выход
-//delay_ms(1);
+delay_ms(22);
 SCL &= ~(1<<4);//вход
-//delay_ms(1);
+delay_ms(22);
 SDA &= ~(1<<5);//вход
-//delay_ms(1);
+delay_ms(22);
 }
 //-------------------------------------------------------
 void I2C_SendByte (unsigned char d)
@@ -30,19 +30,19 @@ void I2C_SendByte (unsigned char d)
 char x;
 //unsigned char b;
 for (x = 0; x < 8; x ++) { //передача 8 бит данных
-//delay_ms(1);
+delay_ms(22);
 if (d&0x80) SDA &= ~(1<<5);//вход//логический 0
 else SDA |= (1<<5);//выход//логическая 1
-//delay_ms(1);;
+delay_ms(22);
 SCL &= ~(1<<4);//вход
 d <<= 1;
-//delay_ms(1);
+delay_ms(22);
 SCL |= (1<<4);}//выход }
-//delay_ms(1);
-//__delay_us(20);
+delay_ms(22);
+delay_ms(22);
 SDA &= ~(1<<5);//вход //готовимся получить ACK бит
 SCL &= ~(1<<4);//вход
-//delay_ms(1);
+delay_ms(22);
 SCL |= (1<<4);//выход
 SDA |= (1<<5);//выход
 //return result; //Возвращаем значение бита ACK через функцию  
@@ -55,19 +55,19 @@ int result = 0;
 SDA &= ~(1<<5);//вход
 for (i=0; i<8; i++) { //передача 8 бит данных 
    result<<=1;
-//delay_ms(1);
+delay_ms(22);
 SCL &= ~(1<<4);//вход
-//delay_ms(1);
+delay_ms(22);
 if (SDA_IN) result |= 1;
 //else result |= 0;
 SCL |= (1<<4);//выход
 }
 SDA |= (1<<5);//выход
-//delay_ms(1);
+delay_ms(22);
 SCL &= ~(1<<4);//вход
-//delay_ms(1);
+delay_ms(22);
 SCL |= (1<<4);//выход
-//delay_ms(1);
+delay_ms(22);
 return result; //Возвращаем значение бита ACK через функцию 
 }
 //-------------------------------------------------------
@@ -78,19 +78,19 @@ int result = 0;
 SDA &= ~(1<<5);//вход
 for (i=0; i<8; i++) { //передача 8 бит данных
     result<<=1;
-//delay_ms(1);
+delay_ms(22);
 SCL &= ~(1<<4);//вход
-//delay_ms(1);
+delay_ms(22);
 if (SDA_IN) result |=1;
 //else result |= 0;
 SCL |= (1<<4);//выход
 }
 SDA &= ~(1<<5);//вход
-//delay_ms(1);
+delay_ms(22);
 SCL &= ~(1<<4);//вход
-//delay_ms(1);
+delay_ms(22);
 SCL |= (1<<4);//выход
-//delay_ms(1);
+delay_ms(22);
 return result; //Возвращаем значение бита ACK через функцию 
 }
 //-------------------------------------------------------
