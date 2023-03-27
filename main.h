@@ -2,12 +2,14 @@
 #define MAIN_H
 //--------------------------------------------------------------
 #define _XTAL_FREQ 3579000
-#include <xc.h>
+//#include <xc.h>
 
 
 //--------------------------------------------------------------
-//#include "lcd.h"
+#include "lcd.h"
 #include "I2C.h"
-//void delay(unsigned char pl); 
+#include "stm8s.h"
+void delay_ms(unsigned int set_ms);
+void LCD_Init();
 //--------------------------------------------------------------
 #endif /* MAIN_H */
