@@ -570,7 +570,7 @@ main()
 	GPIOC->CR2 |= (1<<4) | (1<<3);//Скорость переключения - до 10 МГц. 
 	
 	DS1307init();
-//	LCD_Init();
+	LCD_Init();
 	sendbyte(0b01000000,0);//sets CGRAM address
   sets_CGRAM (str01);
   sets_CGRAM (str02);
@@ -580,9 +580,10 @@ main()
   sets_CGRAM (str06);
   sets_CGRAM (str07);
   sets_CGRAM (str08);
+	sendbyte(0b00000001,0);//очистка дисплея*/
 	while (1){
 		
-	/* i2c_start();//отправка посылки СТАРТ
+	i2c_start();//отправка посылки СТАРТ
       I2C_SendByte (dev_addrw);//адрес часовой микросхемы - запись
       I2C_SendByte (0b00000000);//вызов регистра секунд (0b00000010)
       i2c_stop ();//отправка посылки СТОП 
@@ -593,11 +594,38 @@ main()
       hour = I2C_ReadByte();//чтение часов
       Weekdays = I2C_ReadByte_last();//чтение дня недели
       i2c_stop (); 	
-		*/
+	//--------------перевод значения времени в десятичный формат--------------------     
+      sece = RTC_ConvertFromDec(sec);
+      secd = RTC_ConvertFromDecd(sec,0);
+      mine = RTC_ConvertFromDec(min);
+      mind = RTC_ConvertFromDecd(min,0);
+      houre = RTC_ConvertFromDec(hour);
+      hourd = RTC_ConvertFromDecd(hour,1);
+      Weekdays = RTC_ConvertFromDec(Weekdays);
+      hourd_alar = RTC_ConvertFromDec(hour_alar);
+      houre_alar = RTC_ConvertFromDecd(hour_alar,1);	
 		
+	
+if (Weekdays > 0b00000110) Weekdays = 0;
+if (hour == 0 && min == 0 && sec == 0b00000010) alarm_flag = 0;
+hour_alar = (((alarm_1 << 4) & 0b00110000)) | (alarm_2 & 0b00001111);// & alarm_2;
+
+min_alar = (((alarm_3 << 4) & 0b00110000)) | (alarm_4 & 0b00001111);// & alarm_2;
+     
+
+clk_out ();
+if (hour_alar == hour && alarm_flag == 0){
+    if (min_alar == min) GPIOA->ODR |=  (1<<3);
+}
+/*
+if (!RA2){
+    RA3 = 0;
+    alarm_flag = 1;
+}
+*/
+
 		
-		
-	if ((GPIOC->IDR & (1 << 3)) == 0 ) tio = 1;
+	/*if ((GPIOC->IDR & (1 << 3)) == 0 ) tio = 1;
 	if ((GPIOC->IDR & (1 << 4)) == 0 ) tio = 0;
 	if (tio == 0) GPIOA->ODR |=  (1<<3);
 	if (tio == 1){
@@ -606,7 +634,7 @@ main()
 	GPIOD->ODR &=  ~((1<<5) | (1<<4) | (1<<3));
 	delay_ms(22);
 	GPIOA->ODR &=  ~(1<<3);	
-}
+}*/
 
 	}
 }
