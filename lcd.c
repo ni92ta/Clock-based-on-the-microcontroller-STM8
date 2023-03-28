@@ -14,8 +14,8 @@ for(i=0;i<19;i++);
 }
 void sendbyteHalf(unsigned char c)
 {
-c <<= 4;
-GPIOD->ODR &= 0b00001111;//&= 0b00001111;
+c <<= 1;//c <<= 4
+GPIOD->ODR &= 0b11000001;//&= 0b00001111;
 GPIOD->ODR |= c; //|= c;
 e &= ~(1<<5);
 delay_ms(50);
@@ -28,7 +28,7 @@ void sendbyte(unsigned char c, unsigned char mode) //
 unsigned char hc = 0;  
 if(mode == 0) rs &= ~(1<<6); 
 else rs |= (1<<6);
-hc = c >> 4;
+hc = c >> 3;
 sendbyteHalf(hc); 
 sendbyteHalf(c);
 }
@@ -37,16 +37,16 @@ void LCD_Init()
 {
 delay_ms(50000);//50ms
   sendbyte(0b00110000, 0);//0b00110000
-  delay_ms(4500);//0b00110000
-  sendbyte(00110000, 0);//
+  delay_ms(4500);//
+  sendbyte(0b00110000, 0);//0b00110000
   delay_ms(4500);
  // sendbyte(0b11000000, 0);//закомментировано
  delay_ms(200);//закомментировано
  //sendbyte(0b00000000, 0);//добавлено
- sendbyte(0b00001111, 0);//0b00001000
+ sendbyte(0b00001111, 0);//0b00001111
   delay_ms(1000);//1ms
 
-sendbyte(0b00001111,0);//0b00001100
+sendbyte(0b00001111,0);//0b00001111
 //              ||+---1:Включение, 0:Отключение мигания позиции курсора
 //              |+----1:Включение, 0:Отключение курсора
 //              +-----1:Включение, 0:Отключение дисплея
@@ -70,10 +70,10 @@ delay_ms(37);
 sendbyte(0b00000010,0);//Счётчик DDRAM в 0
 delay_ms(2000);//2ms
 
-sendbyte(0b00000010,0);//Счётчик DDRAM в 0
+sendbyte(0b01000000,0);//Счётчик DDRAM в 0
 delay_ms(2000);//2ms
 
-sendbyte(0b01000000,0);//Установить адрес CGRAM в 0
+sendbyte(0b01000000,0);//Установить адрес CGRAM в 0  0b01000000
 delay_ms(37);
 
 }
