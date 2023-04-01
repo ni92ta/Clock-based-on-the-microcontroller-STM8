@@ -46,8 +46,6 @@ unsigned char alarm_number = 0b00110001;
      unsigned char houree;//переменная для настройки часов
      unsigned char Weekdays;//переменная дня недели до преобразования
 //------------------------------------------------------------------------------
-
-
 void delay_ms(unsigned int set_ms) // Задержка в мс
 {
 	char x;
@@ -56,7 +54,15 @@ void delay_ms(unsigned int set_ms) // Задержка в мс
 	 while (ms--);
  //}
 }
-//------------------------------------------------------------------------------
+//--------------Очистка сегмента дисплея--------------------
+void segment_clear (unsigned char num_seg)
+{
+	//unsigned char x;
+	for (; num_seg > 0; num_seg --){//num_seg-количество сегментов для очистки
+	sendbyte(0b00100000,1);//очистка сегмента
+	}
+}
+//----------------------------------------------------------
 unsigned char RTC_ConvertFromDecd(unsigned char c,unsigned char v){//
     unsigned char ch;
     if (v == 1){
@@ -415,6 +421,19 @@ sendbyte(0b01111001,1);//у
 sendbyte(0b10111111,1);//т
 sendbyte(0b11000011,1);//ы
 break;
+	 case 3:
+sendbyte(0b11100000,1);//Д
+sendbyte(0b01100101,1);//е
+sendbyte(0b10111101,1);//н
+sendbyte(0b11000100,1);//ь
+sendbyte(0b00100000,1);//_
+sendbyte(0b10111101,1);//н
+sendbyte(0b01100101,1);//е
+sendbyte(0b11100011,1);//д
+sendbyte(0b01100101,1);//е
+sendbyte(0b10111011,1);//л
+sendbyte(0b10111000,1);//и
+break;
 }      
 }
 //--------------------------Вывод на LCD--------------------
@@ -435,35 +454,40 @@ void clk_out (void){//
     }    
 //--------------Первое нажатие настройка минут--------------
 if (t == 1){
+digit_out(hourd, 0);//hourd
+digit_out(houre, 2);//houre
 button(min,1);//вызов функции изменения значения
 digit_out(mind, 5);
 digit_out(mine, 7);
-LCD_SetPos(10,1);
+LCD_SetPos(9,0);
+segment_clear (7);//очистка сегмента
+LCD_SetPos(9,1);
+segment_clear (1);//очистка сегмента
 lcd_mask(2);//вывод слова "Минуты"
     }
 //--------------Второе нажатие настройка часа-------
     if (t == 2){
-        n = 0;
-        LCD_SetPos(5,1);
-        lcd_mask (1);//вывод слова "Часы"
-button(hour,2);
+       // n = 0;????????????
+button(hour,2);//вызов функции изменения значения
 digit_out(hourd, 0);//hourd
-digit_out(houre, 2);//houre
+digit_out(houre, 2);//houre		
+digit_out(mind, 5);
+digit_out(mine, 7);
+LCD_SetPos(9,0);
+segment_clear (7);//очистка сегмента
+LCD_SetPos(9,1);
+segment_clear (1);//очистка сегмента
+lcd_mask (1);//вывод слова "Часы"				
+segment_clear (2);//очистка сегмента				
     }
     //--------------Третье нажатие настройка дня недели-------
     if (t == 3){
 button(Weekdays,3);
-sendbyte(0b11100000,1);//Д
-sendbyte(0b01100101,1);//е
-sendbyte(0b10111101,1);//н
-sendbyte(0b11000100,1);//ь
-sendbyte(0b00100000,1);//_
-sendbyte(0b10111101,1);//н
-sendbyte(0b01100101,1);//е
-sendbyte(0b11100011,1);//д
-sendbyte(0b01100101,1);//е
-sendbyte(0b10111011,1);//л
-sendbyte(0b10111000,1);//и
+LCD_SetPos(0,0);
+segment_clear (16);//очистка сегмента
+LCD_SetPos(0,1);
+lcd_mask(3);//вывод слова "День недели"
+segment_clear (3);//очистка сегмента
 Day_Switch ();
 LCD_SetPos(14,1);
 sendbyte(DAY_1,1);
