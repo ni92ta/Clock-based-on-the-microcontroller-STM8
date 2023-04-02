@@ -480,7 +480,7 @@ segment_clear (1);//очистка сегмента
 lcd_mask (1);//вывод слова "Часы"				
 segment_clear (2);//очистка сегмента				
     }
-    //--------------Третье нажатие настройка дня недели-------
+    //--------------Третье нажатие настройка дня недели-----
     if (t == 3){
 button(Weekdays,3);
 LCD_SetPos(0,0);
@@ -493,30 +493,32 @@ LCD_SetPos(14,1);
 sendbyte(DAY_1,1);
 sendbyte(DAY_2,1);
     }
-//--------------Четвёртое нажатие настройка будильника , часы-------
+//----------Четвёртое нажатие настройка будильника , часы---
     if (t == 4){
 button(hour_alar,4);
         LCD_SetPos(0,0);
 lcd_mask(0);//вывод слова "Будильник"
-LCD_SetPos(14,0);
-sendbyte(0b11101101,1);
-sendbyte(0b11111111,1);
+//LCD_SetPos(14,0);
+//sendbyte(0b11101101,1);
+//sendbyte(0b11111111,1);
         LCD_SetPos(0,1);
-lcd_mask (1);
+lcd_mask (1);//вывод слова "Часы"
         LCD_SetPos(5,1);
         sendbyte(alarm_1,1);
-        sendbyte(alarm_2,1);    
+        sendbyte(alarm_2,1);
+segment_clear (9);//очистка сегмента				
      }
-//--------------Пятое нажатие настройка будильника №2-------
+//--------------Пятое нажатие настройка будильника, минуты--
     if (t == 5){
         button(alarm_number,5);
         LCD_SetPos(0,0);
 lcd_mask(0);//вывод слова "Будильник"
-LCD_SetPos(14,0);
-sendbyte(0b11101101,1);
-sendbyte(0b11111111,1);
+//LCD_SetPos(14,0);
+//sendbyte(0b11101101,1);
+//sendbyte(0b11111111,1);
         LCD_SetPos(0,1);
-lcd_mask(2);//вывод слова "Минуты"        
+lcd_mask(2);//вывод слова "Минуты"
+segment_clear (1);//очистка сегмента
         LCD_SetPos(7,1);
         sendbyte(alarm_3,1);
         sendbyte(alarm_4,1);
