@@ -9,6 +9,10 @@
  #include "lcd.h"
  #include "main.h"
  //#include "lcd.c"
+ /*
+ Что-то типа - #define TestRam ((unsigned char *)0x0100)
+ну и обращение к ней соответсвенно - *(TestRam) = 0xEE
+*/
  
  #define rs GPIOD->ODR//выход RB2//
 #define e GPIOD->ODR//выходRB3//
@@ -18,11 +22,15 @@
 unsigned int  ms = 0;//переменная для функции задержки
 unsigned char tio=0;//Флаг нажатия кнопки
 //----------------------------------------------------------
-unsigned char *p;// = 0x4000;
+unsigned char *address = (unsigned char*)0x4000;// = 0x4000;
 unsigned char alarm_1;//= 0b00110000;
 unsigned char alarm_2;// = 0b00110000;
 unsigned char alarm_3;// = 0b00110000;
 unsigned char alarm_4;// = 0b00110001;
+unsigned char *p_alarm_1;
+unsigned char *p_alarm_2;
+unsigned char *p_alarm_3;
+unsigned char *p_alarm_4;
 unsigned char t=0;//Флаг нажатия кнопки
 unsigned char n;//Флаг очистки дисплея
 unsigned char alarm_flag;//Флаг включения будильника
@@ -524,6 +532,8 @@ segment_clear (9);//очистка сегмента
     I2C_SendByte (alarm_1);//
 	  I2C_SendByte (alarm_2);//	
     i2c_stop ();
+		*address = alarm_1;//записываем переменную по адресу ПЗУ
+	//*p_alarm_1 = alarm_1;
      }
 //--------------Пятое нажатие настройка будильника, минуты--
     if (t == 5){
@@ -618,6 +628,12 @@ main()
   sets_CGRAM (str07);
   sets_CGRAM (str08);
 	sendbyte(0b00000001,0);//очистка дисплея*/
+	
+	//p_alarm_1 = &address;//присваимавем переменной p_alarm адрес alarm
+	//p_alarm_2 = &alarm_2;//присваимавем переменной p_alarm адрес alarm
+	//p_alarm_3 = &alarm_3;//присваимавем переменной p_alarm адрес alarm
+	//p_alarm_4 = &alarm_4;//присваимавем переменной p_alarm адрес alarm
+	alarm_1 = *address;
 	while (1){
 		
 	i2c_start();//отправка посылки СТАРТ
@@ -695,4 +711,11 @@ us *=(SystemCoreClock/1000000)/5;
 	delay_ms(1000);
 	GPIOA->ODR &=  ~(1<<3);	
 }
+
+
+
+
+int a=1;
+int *p = (int*)0x12345678;
+*p=a;
 */
