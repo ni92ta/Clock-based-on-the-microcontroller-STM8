@@ -1522,7 +1522,7 @@ FLASH_TypeDef;
 #define FLASH_PUKR_RESET_VALUE  ((uint8_t)0x00)
 #define FLASH_DUKR_RESET_VALUE  ((uint8_t)0x00)
 
-/**
+/**k
   * @}
   */
 
