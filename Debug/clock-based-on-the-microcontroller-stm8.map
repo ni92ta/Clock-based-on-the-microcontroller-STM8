@@ -1,25 +1,25 @@
 
-Map of Debug\clock-based-on-the-microcontroller-stm8.sm8 from link file Debug\clock-based-on-the-microcontroller-stm8.lkf - Sun Mar 26 17:23:02 2023
+Map of Debug\clock-based-on-the-microcontroller-stm8.sm8 from link file Debug\clock-based-on-the-microcontroller-stm8.lkf - Mon Apr  3 19:44:49 2023
 
 
                                --------
                                Segments
                                --------
 
-start 00008080 end 00008080 length     0 segment .const
-start 00008095 end 000082c2 length   557 segment .text
+start 00008080 end 00008084 length     4 segment .const
+start 000080dd end 00008ce1 length  3076 segment .text
 start 00004000 end 00004000 length     0 segment .eeprom
-start 00000000 end 0000000d length    13 segment .bsct, initialized
-start 00008088 end 00008095 length    13 segment .bsct, from
-start 0000000d end 00000023 length    22 segment .ubsct
-start 00000023 end 00000023 length     0 segment .bit
-start 00000023 end 00000023 length     0 segment .share
+start 00000000 end 00000051 length    81 segment .bsct, initialized
+start 0000808c end 000080dd length    81 segment .bsct, from
+start 00000051 end 00000077 length    38 segment .ubsct
+start 00000077 end 00000077 length     0 segment .bit
+start 00000077 end 00000077 length     0 segment .share
 start 00000100 end 00000100 length     0 segment .data
 start 00000100 end 00000100 length     0 segment .bss
-start 00000000 end 0000023b length   571 segment .info.
-start 00000000 end 00000805 length  2053 segment .debug
+start 00000000 end 00000334 length   820 segment .info.
+start 00000000 end 00001193 length  4499 segment .debug
 start 00008000 end 00008080 length   128 segment .const
-start 00008080 end 00008088 length     8 segment .init
+start 00008084 end 0000808c length     8 segment .init
 
 
                                -------
@@ -27,35 +27,53 @@ start 00008080 end 00008088 length     8 segment .init
                                -------
 
 C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\crtsi0.sm8:
-start 00008095 end 000080e5 length    80 section .text
+start 000080dd end 0000812d length    80 section .text
 start 00000100 end 00000100 length     0 section .bss
-start 0000000d end 0000000d length     0 section .ubsct
+start 00000051 end 00000051 length     0 section .ubsct
 start 00000000 end 00000034 length    52 section .info.
 
 Debug\i2c.o:
-start 000080e5 end 000081b5 length   208 section .text
+start 0000812d end 0000827b length   334 section .text
 start 00000000 end 0000024b length   587 section .debug
 start 00000034 end 0000009f length   107 section .info.
 
+Debug\lcd.o:
+start 0000827b end 00008393 length   280 section .text
+start 0000024b end 000004db length   656 section .debug
+start 0000009f end 0000010a length   107 section .info.
+
 Debug\main.o:
-start 000081b5 end 000082c1 length   268 section .text
-start 00000000 end 0000000d length    13 section .bsct
-start 0000000d end 0000001d length    16 section .ubsct
-start 0000024b end 0000069a length  1103 section .debug
-start 0000009f end 0000010b length   108 section .info.
+start 00008393 end 00008cb9 length  2342 section .text
+start 00000000 end 00000051 length    81 section .bsct
+start 00000051 end 0000006d length    28 section .ubsct
+start 000004db end 00001028 length  2893 section .debug
+start 0000010a end 00000176 length   108 section .info.
+start 00008080 end 00008084 length     4 section .const
+
+(C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\libm0.sm8)lcmp.o:
+start 00008cb9 end 00008cd9 length    32 section .text
+start 00000176 end 000001a5 length    47 section .info.
+
+(C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\libm0.sm8)lreg.o:
+start 0000006d end 00000071 length     4 section .ubsct
+start 000001a5 end 000001d4 length    47 section .info.
+
+(C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\libm0.sm8)utolx.o:
+start 00008cd9 end 00008ce0 length     7 section .text
+start 000001d4 end 00000204 length    48 section .info.
 
 (C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\libm0.sm8)xreg.o:
-start 0000001d end 00000020 length     3 section .ubsct
-start 0000010b end 0000013a length    47 section .info.
+start 00000071 end 00000074 length     3 section .ubsct
+start 00000204 end 00000233 length    47 section .info.
 
 (C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\libm0.sm8)yreg.o:
-start 00000020 end 00000023 length     3 section .ubsct
-start 0000013a end 00000169 length    47 section .info.
+start 00000074 end 00000077 length     3 section .ubsct
+start 00000233 end 00000262 length    47 section .info.
 
 Debug\stm8_interrupt_vector.o:
-start 000082c1 end 000082c2 length     1 section .text
-start 0000069a end 00000805 length   363 section .debug
-start 00000169 end 000001e6 length   125 section .info.
+start 00008ce0 end 00008ce1 length     1 section .text
+start 00001028 end 00001193 length   363 section .debug
+start 00000262 end 000002df length   125 section .info.
 start 00008000 end 00008080 length   128 section .const
 
 
@@ -64,56 +82,167 @@ start 00008000 end 00008080 length   128 section .const
                              -----------
 
 Debug\i2c.o:
-_I2C_ReadByte               5   (5)
-_I2C_ReadByte_last          5   (5)
-_I2C_SendByte               4   (4)
-_i2c_start                  2   (2)
-_i2c_stop                   2   (2)
+_I2C_ReadByte               7   (5)
+_I2C_ReadByte_last          7   (5)
+_I2C_SendByte               6   (4)
+_i2c_start                  4   (2)
+_i2c_stop                   4   (2)
+
+Debug\lcd.o:
+_LCD_Clear             >   12   (2)
+_LCD_Init                  12   (2)
+_LCD_SetPos                14   (4)
+_LCD_delay             >    4   (4)
+_sendbyte                  10   (5)
+_sendbyteHalf               5   (3)
 
 Debug\main.o:
-_DS1307init                 6   (2)
+_DS1307init                 8   (2)
+_Day_Switch                 2   (2)
+_RTC_ConvertFromDec         3   (3)
+_RTC_ConvertFromDecd        5   (5)
+_button                    16   (6)
+_clk_out                   22   (4)
 _delay_ms                   2   (2)
-_main                  >    8   (2)
+_digit_out                 18   (4)
+_lcd_mask                  12   (2)
+_main                  >   25   (3)
+_segment_clear             13   (3)
+_sending_data              10   (4)
+_sets_CGRAM                15   (5)
+_vyb_raz                    3   (3)
+_vyb_raz_h                  3   (3)
 
 Debug\stm8_interrupt_vector.o:
 f_NonHandledInterrupt  >    6   (6)
 
-Stack size: 14
+Stack size: 31
 
 
                               ---------
                               Call tree
                               ---------
-   1 > __stext: (0)
-
-   2 > _main: (2)
-   3      + _DS1307init: (2)
-   4      |    + _I2C_SendByte: (4)
-   5      |    + _i2c_start: (2)
-   6      |    + _i2c_stop: (2)
+   1 > _LCD_Clear: (2)
+   2      + _delay_ms: (2)
+   3      + _sendbyte: (5)
+   4      |    + _sendbyteHalf: (3)
+   5      |    |    + _delay_ms --> 2
+          |    | 
           | 
-   7      + _I2C_ReadByte: (5)
-   8      + _I2C_ReadByte_last: (5)
-   9      + _I2C_SendByte --> 4
-  10      + _delay_ms: (2)
-  11      + _i2c_start --> 5
-  12      + _i2c_stop --> 6
        
-  13 > f_NonHandledInterrupt: (6)
+   6 > _LCD_delay: (4)
 
-  14   _DS1307init --> 3
+   7 > __stext: (0)
 
-  15   _I2C_ReadByte --> 7
+   8 > _main: (3)
+   9      + _DS1307init: (2)
+  10      |    + _I2C_SendByte: (4)
+  11      |    |    + _delay_ms --> 2
+          |    | 
+  12      |    + _i2c_start: (2)
+  13      |    |    + _delay_ms --> 2
+          |    | 
+  14      |    + _i2c_stop: (2)
+  15      |    |    + _delay_ms --> 2
+          |    | 
+          | 
+  16      + _I2C_ReadByte: (5)
+  17      |    + _delay_ms --> 2
+          | 
+  18      + _I2C_ReadByte_last: (5)
+  19      |    + _delay_ms --> 2
+          | 
+  20      + _I2C_SendByte --> 10
+  21      + _LCD_Init: (2)
+  22      |    + _delay_ms --> 2
+  23      |    + _sendbyte --> 3
+          | 
+  24      + _RTC_ConvertFromDec: (3)
+  25      + _RTC_ConvertFromDecd: (5)
+  26      + _clk_out: (4)
+  27      |    + _Day_Switch: (2)
+  28      |    + _I2C_SendByte --> 10
+  29      |    + _LCD_SetPos: (4)
+  30      |    |    + _sendbyte --> 3
+          |    | 
+  31      |    + _button: (6)
+  32      |    |    + _sending_data: (4)
+  33      |    |    |    + _I2C_SendByte --> 10
+  34      |    |    |    + _i2c_start --> 12
+  35      |    |    |    + _i2c_stop --> 14
+          |    |    | 
+  36      |    |    + _vyb_raz: (3)
+  37      |    |    + _vyb_raz_h: (3)
+          |    | 
+  38      |    + _digit_out: (4)
+  39      |    |    + _LCD_SetPos --> 29
+  40      |    |    + _sendbyte --> 3
+          |    | 
+  41      |    + _i2c_start --> 12
+  42      |    + _i2c_stop --> 14
+  43      |    + _lcd_mask: (2)
+  44      |    |    + _sendbyte --> 3
+          |    | 
+  45      |    + _segment_clear: (3)
+  46      |    |    + _sendbyte --> 3
+          |    | 
+  47      |    + _sendbyte --> 3
+          | 
+  48      + _delay_ms --> 2
+  49      + _i2c_start --> 12
+  50      + _i2c_stop --> 14
+  51      + _sendbyte --> 3
+  52      + _sets_CGRAM: (5)
+  53      |    + _sendbyte --> 3
+          | 
+       
+  54 > f_NonHandledInterrupt: (6)
 
-  16   _I2C_ReadByte_last --> 8
+  55   _DS1307init --> 9
 
-  17   _I2C_SendByte --> 4
+  56   _Day_Switch --> 27
 
-  18   _delay_ms --> 10
+  57   _I2C_ReadByte --> 16
 
-  19   _i2c_start --> 5
+  58   _I2C_ReadByte_last --> 18
 
-  20   _i2c_stop --> 6
+  59   _I2C_SendByte --> 10
+
+  60   _LCD_Init --> 21
+
+  61   _LCD_SetPos --> 29
+
+  62   _RTC_ConvertFromDec --> 24
+
+  63   _RTC_ConvertFromDecd --> 25
+
+  64   _button --> 31
+
+  65   _clk_out --> 26
+
+  66   _delay_ms --> 2
+
+  67   _digit_out --> 38
+
+  68   _i2c_start --> 12
+
+  69   _i2c_stop --> 14
+
+  70   _lcd_mask --> 43
+
+  71   _segment_clear --> 45
+
+  72   _sendbyte --> 3
+
+  73   _sendbyteHalf --> 4
+
+  74   _sending_data --> 32
+
+  75   _sets_CGRAM --> 52
+
+  76   _vyb_raz --> 36
+
+  77   _vyb_raz_h --> 37
 
 
 
@@ -121,21 +250,30 @@ Stack size: 14
                                Symbols
                                -------
 
-_DAY_1                  00000009   defined in Debug\main.o section .bsct, initialized
-_DAY_2                  0000000a   defined in Debug\main.o section .bsct, initialized
-_DS1307init             000081ca   defined in Debug\main.o section .text
-_I2C_ReadByte           0000813b   defined in Debug\i2c.o section .text
+_DAY_1                  0000000d   defined in Debug\main.o section .bsct, initialized
+_DAY_2                  0000000e   defined in Debug\main.o section .bsct, initialized
+_DS1307init             000085e3   defined in Debug\main.o section .text
+_Day_Switch             00008763   defined in Debug\main.o section .text
+_I2C_ReadByte           000081c5   defined in Debug\i2c.o section .text
                                    used in Debug\main.o
-_I2C_ReadByte_last      00008178   defined in Debug\i2c.o section .text
+_I2C_ReadByte_last      00008220   defined in Debug\i2c.o section .text
                                    used in Debug\main.o
-_I2C_SendByte           00008103   defined in Debug\i2c.o section .text
+_I2C_SendByte           00008169   defined in Debug\i2c.o section .text
                                    used in Debug\main.o
-_Weekdays               0000000d   defined in Debug\main.o section .ubsct
+_LCD_Clear              00008364   defined in Debug\lcd.o section .text
+_LCD_Init               000082db   defined in Debug\lcd.o section .text
+                                   used in Debug\main.o
+_LCD_SetPos             00008371   defined in Debug\lcd.o section .text
+                                   used in Debug\main.o
+_LCD_delay              0000827b   defined in Debug\lcd.o section .text
+_RTC_ConvertFromDec     000083ed   defined in Debug\main.o section .text
+_RTC_ConvertFromDecd    000083b6   defined in Debug\main.o section .text
+_Weekdays               00000051   defined in Debug\main.o section .ubsct
 __endmem                000001ff   defined in command file
                                    *** not used ***
-__endzp                 00000023   defined in command file section .ubsct
+__endzp                 00000077   defined in command file section .ubsct
                                    used in C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\crtsi0.sm8
-__idesc__               00008080   defined in linker section .init
+__idesc__               00008084   defined in linker section .init
                                    used in C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\crtsi0.sm8
 __memory                00000100   defined in command file section .bss
                                    used in C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\crtsi0.sm8
@@ -143,44 +281,80 @@ __stack                 000003ff   defined in command file
                                    used in C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\crtsi0.sm8
 __startmem              00000100   defined in command file section .bss
                                    *** not used ***
-__stext                 00008095   defined in C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\crtsi0.sm8 section .text
+__stext                 000080dd   defined in C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\crtsi0.sm8 section .text
                                    used in Debug\stm8_interrupt_vector.o
 __vectab                00008000   defined in Debug\stm8_interrupt_vector.o section .const
-_alarm_1                00000003   defined in Debug\main.o section .bsct, initialized
-_alarm_2                00000004   defined in Debug\main.o section .bsct, initialized
-_alarm_3                00000005   defined in Debug\main.o section .bsct, initialized
-_alarm_4                00000006   defined in Debug\main.o section .bsct, initialized
-_alarm_flag             0000001b   defined in Debug\main.o section .ubsct
-_alarm_number           00000008   defined in Debug\main.o section .bsct, initialized
-_delay_ms               000081b5   defined in Debug\main.o section .text
-_exit                   000080e3   defined in C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\crtsi0.sm8 section .text
-_hour                   00000014   defined in Debug\main.o section .ubsct
-_hour_alar              00000013   defined in Debug\main.o section .ubsct
-_hourd                  00000010   defined in Debug\main.o section .ubsct
-_hourd_alar             0000000c   defined in Debug\main.o section .bsct, initialized
-_houre                  00000011   defined in Debug\main.o section .ubsct
-_houre_alar             0000000b   defined in Debug\main.o section .bsct, initialized
-_houree                 0000000e   defined in Debug\main.o section .ubsct
-_i2c_start              000080e5   defined in Debug\i2c.o section .text
+_address_1              00000003   defined in Debug\main.o section .bsct, initialized
+_address_2              00000005   defined in Debug\main.o section .bsct, initialized
+_address_3              00000007   defined in Debug\main.o section .bsct, initialized
+_address_4              00000009   defined in Debug\main.o section .bsct, initialized
+_alarm_1                0000006c   defined in Debug\main.o section .ubsct
+_alarm_2                0000006b   defined in Debug\main.o section .ubsct
+_alarm_3                0000006a   defined in Debug\main.o section .ubsct
+_alarm_4                00000069   defined in Debug\main.o section .ubsct
+_alarm_flag             0000005f   defined in Debug\main.o section .ubsct
+_alarm_number           0000000c   defined in Debug\main.o section .bsct, initialized
+_button                 0000869a   defined in Debug\main.o section .text
+_clk_out                00008891   defined in Debug\main.o section .text
+_delay_ms               00008393   defined in Debug\main.o section .text
+                                   used in Debug\i2c.o Debug\lcd.o
+_digit_out              000083f7   defined in Debug\main.o section .text
+_exit                   0000812b   defined in C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\crtsi0.sm8 section .text
+_hour                   00000058   defined in Debug\main.o section .ubsct
+_hour_alar              00000057   defined in Debug\main.o section .ubsct
+_hourd                  00000054   defined in Debug\main.o section .ubsct
+_hourd_alar             00000010   defined in Debug\main.o section .bsct, initialized
+_houre                  00000055   defined in Debug\main.o section .ubsct
+_houre_alar             0000000f   defined in Debug\main.o section .bsct, initialized
+_houree                 00000052   defined in Debug\main.o section .ubsct
+_i2c_start              0000812d   defined in Debug\i2c.o section .text
                                    used in Debug\main.o
-_i2c_stop               000080f6   defined in Debug\i2c.o section .text
+_i2c_stop               0000814a   defined in Debug\i2c.o section .text
                                    used in Debug\main.o
-_main                   00008203   defined in Debug\main.o section .text
+_lcd_mask               000087c1   defined in Debug\main.o section .text
+_main                   00008b10   defined in Debug\main.o section .text
                                    used in C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\crtsi0.sm8
-_min                    00000017   defined in Debug\main.o section .ubsct
-_min_alar               00000012   defined in Debug\main.o section .ubsct
-_mind                   00000015   defined in Debug\main.o section .ubsct
-_mine                   00000016   defined in Debug\main.o section .ubsct
-_minee                  0000000f   defined in Debug\main.o section .ubsct
+_min                    0000005b   defined in Debug\main.o section .ubsct
+_min_alar               00000056   defined in Debug\main.o section .ubsct
+_mind                   00000059   defined in Debug\main.o section .ubsct
+_mine                   0000005a   defined in Debug\main.o section .ubsct
+_minee                  00000053   defined in Debug\main.o section .ubsct
 _ms                     00000000   defined in Debug\main.o section .bsct, initialized
-_n                      0000001c   defined in Debug\main.o section .ubsct
-_sec                    00000018   defined in Debug\main.o section .ubsct
-_secd                   00000019   defined in Debug\main.o section .ubsct
-_sece                   0000001a   defined in Debug\main.o section .ubsct
-_t                      00000007   defined in Debug\main.o section .bsct, initialized
+_n                      00000060   defined in Debug\main.o section .ubsct
+_p_alarm_1              00000067   defined in Debug\main.o section .ubsct
+_p_alarm_2              00000065   defined in Debug\main.o section .ubsct
+_p_alarm_3              00000063   defined in Debug\main.o section .ubsct
+_p_alarm_4              00000061   defined in Debug\main.o section .ubsct
+_sec                    0000005c   defined in Debug\main.o section .ubsct
+_secd                   0000005d   defined in Debug\main.o section .ubsct
+_sece                   0000005e   defined in Debug\main.o section .ubsct
+_segment_clear          000083a5   defined in Debug\main.o section .text
+_sendbyte               000082b9   defined in Debug\lcd.o section .text
+                                   used in Debug\main.o
+_sendbyteHalf           00008290   defined in Debug\lcd.o section .text
+_sending_data           00008682   defined in Debug\main.o section .text
+_sets_CGRAM             00008af2   defined in Debug\main.o section .text
+_str01                  00000011   defined in Debug\main.o section .bsct, initialized
+_str02                  00000019   defined in Debug\main.o section .bsct, initialized
+_str03                  00000021   defined in Debug\main.o section .bsct, initialized
+_str04                  00000029   defined in Debug\main.o section .bsct, initialized
+_str05                  00000031   defined in Debug\main.o section .bsct, initialized
+_str06                  00000039   defined in Debug\main.o section .bsct, initialized
+_str07                  00000041   defined in Debug\main.o section .bsct, initialized
+_str08                  00000049   defined in Debug\main.o section .bsct, initialized
+_t                      0000000b   defined in Debug\main.o section .bsct, initialized
 _tio                    00000002   defined in Debug\main.o section .bsct, initialized
-c_x                     0000001d   defined in (C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\libm0.sm8)xreg.o section .ubsct
+_vyb_raz                0000861c   defined in Debug\main.o section .text
+_vyb_raz_h              0000865e   defined in Debug\main.o section .text
+c_lcmp                  00008cb9   defined in (C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\libm0.sm8)lcmp.o section .text
+                                   used in Debug\main.o
+c_lreg                  0000006d   defined in (C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\libm0.sm8)lreg.o section .ubsct
+                                   used in (C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\libm0.sm8)lcmp.o
+                                           (C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\libm0.sm8)utolx.o
+c_uitolx                00008cd9   defined in (C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\libm0.sm8)utolx.o section .text
+                                   used in Debug\main.o
+c_x                     00000071   defined in (C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\libm0.sm8)xreg.o section .ubsct
                                    used in C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\crtsi0.sm8
-c_y                     00000020   defined in (C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\libm0.sm8)yreg.o section .ubsct
+c_y                     00000074   defined in (C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\libm0.sm8)yreg.o section .ubsct
                                    used in C:\Program Files (x86)\COSMIC\FSE_Compilers\CXSTM8\lib\crtsi0.sm8
-f_NonHandledInterrupt   000082c1   defined in Debug\stm8_interrupt_vector.o section .text
+f_NonHandledInterrupt   00008ce0   defined in Debug\stm8_interrupt_vector.o section .text
