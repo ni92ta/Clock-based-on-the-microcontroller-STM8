@@ -22,7 +22,10 @@
 unsigned int  ms = 0;//переменная для функции задержки
 unsigned char tio=0;//Флаг нажатия кнопки
 //----------------------------------------------------------
-unsigned char *address = (unsigned char*)0x4000;// = 0x4000;
+unsigned char *address_1 = (unsigned char*)0x4000;// = 0x4000;
+unsigned char *address_2 = (unsigned char*)0x4001;// = 0x4000;
+unsigned char *address_3 = (unsigned char*)0x4002;// = 0x4000;
+unsigned char *address_4 = (unsigned char*)0x4003;// = 0x4000;
 unsigned char alarm_1;//= 0b00110000;
 unsigned char alarm_2;// = 0b00110000;
 unsigned char alarm_3;// = 0b00110000;
@@ -264,16 +267,8 @@ sendbyte(0b00000011,1);
 //------------Инициализация микросхемы DC1307---------------
 void DS1307init (void){//инициализация микросхемы
        // __delay_ms(10);
-			     i2c_start ();//отправка посылки СТАРТ
-    I2C_SendByte (dev_addrr);//адрес часовой микросхемы - запись 
-    I2C_SendByte (0b00001000);//вызов регистра ROM ОЗУ
-    alarm_1 = I2C_ReadByte();//
-	  alarm_2 = I2C_ReadByte();//	
-    i2c_stop ();
 			 
-			 
-			 
-   /*     
+        
     i2c_start ();//отправка посылки СТАРТ
     I2C_SendByte (dev_addrw);//адрес часовой микросхемы - запись
     I2C_SendByte (0b00000000);//вызов регистра секунд (0b00000010)
@@ -282,7 +277,7 @@ void DS1307init (void){//инициализация микросхемы
     I2C_SendByte (0b00100011);//установка часов 00  0b00100011
     I2C_SendByte (0b00000110);//установка дня ВС
     i2c_stop ();
-    */
+    
     
     i2c_start ();//отправка посылки СТАРТ
     I2C_SendByte (dev_addrw);//адрес часовой микросхемы - запись 
@@ -532,8 +527,8 @@ segment_clear (9);//очистка сегмента
     I2C_SendByte (alarm_1);//
 	  I2C_SendByte (alarm_2);//	
     i2c_stop ();
-		*address = alarm_1;//записываем переменную по адресу ПЗУ
-	//*p_alarm_1 = alarm_1;
+*address_1 = alarm_1;//записываем переменную по адресу ПЗУ
+*address_2 = alarm_2;//записываем переменную по адресу ПЗУ
      }
 //--------------Пятое нажатие настройка будильника, минуты--
     if (t == 5){
@@ -549,7 +544,8 @@ segment_clear (1);//очистка сегмента
         LCD_SetPos(7,1);
         sendbyte(alarm_3,1);
         sendbyte(alarm_4,1);
-
+*address_3 = alarm_3;//записываем переменную по адресу ПЗУ
+*address_4 = alarm_4;//записываем переменную по адресу ПЗУ
     }
 //--------------Вывод на дисплей--------------------
 if (t == 0){
@@ -633,7 +629,10 @@ main()
 	//p_alarm_2 = &alarm_2;//присваимавем переменной p_alarm адрес alarm
 	//p_alarm_3 = &alarm_3;//присваимавем переменной p_alarm адрес alarm
 	//p_alarm_4 = &alarm_4;//присваимавем переменной p_alarm адрес alarm
-	alarm_1 = *address;
+	alarm_1 = *address_1;
+	alarm_2 = *address_2;
+	alarm_3 = *address_3;
+	alarm_4 = *address_4;
 	while (1){
 		
 	i2c_start();//отправка посылки СТАРТ
