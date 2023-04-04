@@ -13,7 +13,8 @@
  Что-то типа - #define TestRam ((unsigned char *)0x0100)
 ну и обращение к ней соответсвенно - *(TestRam) = 0xEE
 */
- 
+ unsigned char tul = 0;
+ unsigned char tuk;
  #define rs GPIOD->ODR//выход RB2//
 #define e GPIOD->ODR//выходRB3//
  
@@ -22,6 +23,7 @@
 unsigned int  ms = 0;//переменная для функции задержки
 unsigned char tio=0;//Флаг нажатия кнопки
 //----------------------------------------------------------
+unsigned char watchdog = 0;
 unsigned char *address_1 = (unsigned char*)0x4000;// = 0x4000;
 unsigned char *address_2 = (unsigned char*)0x4001;// = 0x4000;
 unsigned char *address_3 = (unsigned char*)0x4002;// = 0x4000;
@@ -266,24 +268,19 @@ sendbyte(0b00000011,1);
 }
 //------------Инициализация микросхемы DC1307---------------
 void DS1307init (void){//инициализация микросхемы
-        delay_ms(10);
-			 
+        delay_ms(2);
         
     i2c_start ();//отправка посылки СТАРТ
     I2C_SendByte (dev_addrw);//адрес часовой микросхемы - запись
     I2C_SendByte (0b00000000);//вызов регистра секунд (0b00000010)
-    I2C_SendByte (0b01010101);//установка секунд 55
-    //I2C_SendByte (0b01011001);//установка минут 00
-    //I2C_SendByte (0b00100011);//установка часов 00  0b00100011
-   // I2C_SendByte (0b00000110);//установка дня ВС
+    I2C_SendByte (0b00000000);//установка секунд 55  01010101
     i2c_stop ();
     
-    
-    i2c_start ();//отправка посылки СТАРТ
+		i2c_start ();//отправка посылки СТАРТ
     I2C_SendByte (dev_addrw);//адрес часовой микросхемы - запись 
     I2C_SendByte (0b00000111);//вызов регистра clock out
     I2C_SendByte (0b00010000);//включение делителя частоты 1Hz
-    i2c_stop ();
+    i2c_stop ();	
 }
 //-----------------------переключение десятков минут----------------------------
 unsigned char vyb_raz (unsigned char u){
@@ -506,14 +503,64 @@ LCD_SetPos(14,1);
 sendbyte(DAY_1,1);
 sendbyte(DAY_2,1);
     }
+//----------Четвёртое нажатие настройка будильника 1-----
+	if (t == 4){
+	    unsigned int butcount = 0;
+			LCD_SetPos(15,0);		
+sendbyte(alarm_number,1);
+ while((GPIOC->IDR & (1 << 3)) == 0 )
+  { 
+ if(butcount < 40000)//Подавление дребезга
+    {
+      butcount++;
+    }
+    else
+    {
+ if(tul == 0){
+LCD_SetPos(14,0);		
+sendbyte(0b11101101,1);
+tul = 1;
+tuk = 1;
+break;
+//sendbyte(alarm_number,1);
+}
+if (tul == 1){
+LCD_SetPos(14,0);
+sendbyte(0b00100000,1);
+tul = 0;
+tuk = 0;
+break;  
+//sendbyte(alarm_number,1);	
+}
+      break;     
+    }   
+    } 
+
+
+	
+	
+
+
+button(hour_alar,4);
+        LCD_SetPos(0,0);
+lcd_mask(0);//вывод слова "Будильник"
+        LCD_SetPos(0,1);
+lcd_mask (1);//вывод слова "Часы"
+        LCD_SetPos(5,1);
+        sendbyte(alarm_1,1);
+        sendbyte(alarm_2,1);
+segment_clear (9);//очистка сегмента
+//РАССКОМЕНТИРОВАТЬ ПОСЛЕ НАЛАДКИ
+//*address_1 = alarm_1;//записываем переменную по адресу ПЗУ  
+//*address_2 = alarm_2;//записываем переменную по адресу ПЗУ		
+		
+}	
+	/*	
 //----------Четвёртое нажатие настройка будильника , часы---
     if (t == 4){
 button(hour_alar,4);
         LCD_SetPos(0,0);
 lcd_mask(0);//вывод слова "Будильник"
-//LCD_SetPos(14,0);
-//sendbyte(0b11101101,1);
-//sendbyte(0b11111111,1);
         LCD_SetPos(0,1);
 lcd_mask (1);//вывод слова "Часы"
         LCD_SetPos(5,1);
@@ -535,9 +582,6 @@ segment_clear (9);//очистка сегмента
         button(alarm_number,5);
         LCD_SetPos(0,0);
 lcd_mask(0);//вывод слова "Будильник"
-//LCD_SetPos(14,0);
-//sendbyte(0b11101101,1);
-//sendbyte(0b11111111,1);
         LCD_SetPos(0,1);
 lcd_mask(2);//вывод слова "Минуты"
 segment_clear (1);//очистка сегмента
@@ -546,7 +590,7 @@ segment_clear (1);//очистка сегмента
         sendbyte(alarm_4,1);
 *address_3 = alarm_3;//записываем переменную по адресу ПЗУ
 *address_4 = alarm_4;//записываем переменную по адресу ПЗУ
-    }
+    }*/
 //--------------Вывод на дисплей--------------------
 if (t == 0){
     Day_Switch ();
@@ -566,7 +610,9 @@ sendbyte(0b11011111,1);
 digit_out(secd, 10);
 digit_out(sece, 12);
 LCD_SetPos(14,0);
-sendbyte(0b11101101,1);
+if (tuk = 1){
+sendbyte(0b11101101,1);}
+else sendbyte(0b00100000,1);
 sendbyte(alarm_number,1);
 LCD_SetPos(14,1);
 sendbyte(DAY_1,1);//
@@ -625,14 +671,10 @@ main()
   sets_CGRAM (str08);
 	sendbyte(0b00000001,0);//очистка дисплея*/
 	
-	//p_alarm_1 = &address;//присваимавем переменной p_alarm адрес alarm
-	//p_alarm_2 = &alarm_2;//присваимавем переменной p_alarm адрес alarm
-	//p_alarm_3 = &alarm_3;//присваимавем переменной p_alarm адрес alarm
-	//p_alarm_4 = &alarm_4;//присваимавем переменной p_alarm адрес alarm
-	alarm_1 = *address_1;
-	alarm_2 = *address_2;
-	alarm_3 = *address_3;
-	alarm_4 = *address_4;
+	alarm_1 = *address_1;//присваимавем переменной alarm_1 адрес в ПЗУ EEPROM
+	alarm_2 = *address_2;//присваимавем переменной alarm_2 адрес в ПЗУ EEPROM
+	alarm_3 = *address_3;//присваимавем переменной alarm_3 адрес в ПЗУ EEPROM
+	alarm_4 = *address_4;//присваимавем переменной alarm_4 адрес в ПЗУ EEPROM
 	while (1){
 		
 	i2c_start();//отправка посылки СТАРТ
@@ -656,14 +698,23 @@ main()
       Weekdays = RTC_ConvertFromDec(Weekdays);
       hourd_alar = RTC_ConvertFromDec(hour_alar);
       houre_alar = RTC_ConvertFromDecd(hour_alar,1);	
-		
+			
+	//while((GPIOC->IDR & (1 << 7)) == 0 ){
+		while(watchdog == 0){
+    i2c_start ();//отправка посылки СТАРТ
+    I2C_SendByte (dev_addrw);//адрес часовой микросхемы - запись
+    I2C_SendByte (0b00000000);//вызов регистра секунд (0b00000010)
+    I2C_SendByte (0b00000000);//установка секунд 55  01010101
+    i2c_stop ();
+		watchdog = 1;
+}
 	
 if (Weekdays > 0b00000110) Weekdays = 0;
 if (hour == 0 && min == 0 && sec == 0b00000010) alarm_flag = 0;
 hour_alar = (((alarm_1 << 4) & 0b00110000)) | (alarm_2 & 0b00001111);// & alarm_2;
 min_alar = (((alarm_3 << 4) & 0b00110000)) | (alarm_4 & 0b00001111);// & alarm_2;
 
-//GPIOA->ODR |=  (1<<3) | (1<<2) | (1<<1);
+//модуль запуска ds1307 при сбросе питания
 clk_out ();
 if (hour_alar == hour && alarm_flag == 0){
     if (min_alar == min) GPIOA->ODR |=  (1<<3);
