@@ -8,6 +8,7 @@
  #include "I2C.h"
  #include "lcd.h"
  #include "main.h"
+ #include "void_function.h"
  //#include "lcd.c"
  /*
  Что-то типа - #define TestRam ((unsigned char *)0x0100)
@@ -24,7 +25,7 @@ unsigned int  ms = 0;//переменная для функции задержки
 unsigned char tio=0;//Флаг нажатия кнопки
 //----------------------------------------------------------
 unsigned char watchdog = 0;
-unsigned char *address_1 = (unsigned char*)0x4000;// = 0x4000;
+unsigned char *address_1 = (unsigned char*)0x4000;// = 0x4000; присваиваем адрес в ПЗУ (EEPROM) переменной address
 unsigned char *address_2 = (unsigned char*)0x4001;// = 0x4000;
 unsigned char *address_3 = (unsigned char*)0x4002;// = 0x4000;
 unsigned char *address_4 = (unsigned char*)0x4003;// = 0x4000;
@@ -40,8 +41,8 @@ unsigned char t=0;//Флаг нажатия кнопки
 unsigned char n;//Флаг очистки дисплея
 unsigned char alarm_flag = 0;//Флаг включения будильника
 unsigned char alarm_number = 0b00110001;
- unsigned char DAY_1 = 0b10101000;//ПН
- unsigned char DAY_2 = 0b01001000;//ВТ
+ //unsigned char DAY_1 = 0b10101000;//ПН
+ //unsigned char DAY_2 = 0b01001000;//ВТ
      unsigned char sece;//единицы секунд
      unsigned char secd;//десятки секунд
      unsigned char sec;//секунды до преобразования
@@ -58,7 +59,7 @@ unsigned char alarm_number = 0b00110001;
      unsigned char hourd_alar = 0b00110000;//десятки часов будильника после преобразования     
      unsigned char minee;//переменная для настройки минут 
      unsigned char houree;//переменная для настройки часов
-     unsigned char Weekdays;//переменная дня недели до преобразования
+     //unsigned char Weekdays;//переменная дня недели до преобразования
 //------------------------------------------------------------------------------
 void delay_ms(unsigned int set_ms) // Задержка в мс
 {
@@ -96,191 +97,6 @@ unsigned char RTC_ConvertFromDecd(unsigned char c,unsigned char v){//
 unsigned char RTC_ConvertFromDec(unsigned char c){//
     unsigned char ch = (0b00001111&c);
     return ch;
-}
-//--------------Массивы с сегментами самописных цифр--------
-  unsigned char str01[8]={
-                0b00011110,
-                0b00011110,
-                0b00011000,
-                0b00011000,
-                0b00011000,
-                0b00011000,
-                0b00011000,
-                0b00011000
-  };
-  unsigned char str02[8]={
-                0b00011110,
-                0b00011110,
-                0b00000110,
-                0b00000110,
-                0b00000110,
-                0b00000110,
-                0b00000110,
-                0b00000110
-  };
-  unsigned char str03[8]={
-                0b00011000,
-                0b00011000,
-                0b00011000,
-                0b00011000,
-                0b00011000,
-                0b00011000,
-                0b00011110,
-                0b00011110
-  };
-  unsigned char str04[8]={
-                0b00000110,
-                0b00000110,
-                0b00000110,
-                0b00000110,
-                0b00000110,
-                0b00000110,
-                0b00011110,
-                0b00011110
-  };
-  unsigned char str05[8]={
-                0b00011110,
-                0b00011110,
-                0b00000110,
-                0b00000110,
-                0b00000110,
-                0b00000110,
-                0b00011110,
-                0b00011110
-  };
-  unsigned char str06[8]={
-                0b00011111,
-                0b00011111,
-                0b00011000,
-                0b00011000,
-                0b00011000,
-                0b00011000,
-                0b00011111,
-                0b00011111
-  };
-  unsigned char str07[8]={
-                0b00000000,
-                0b00000000,
-                0b00000000,
-                0b00000000,
-                0b00000000,
-                0b00000000,
-                0b00001110,
-                0b00001110
-  };
-  unsigned char str08[8]={
-                0b00001111,
-                0b00001111,
-                0b00000000,
-                0b00000000,
-                0b00000000,
-                0b00000000,
-                0b00000000,
-                0b00000000
-  };
-//----------------------------------------------------
-//--------------------Вывод собственных символов на дисплей---------------------
-void digit_out (unsigned char digit, unsigned char str1/*, unsigned char str2*/)//digit - цифра от 1 до 9
-//str1- номер строки для вывода, сначала 1 потом 2
-{
-switch (digit){
-    case 0:
-LCD_SetPos(str1,0);
-sendbyte(0b00000000,1);//0
-sendbyte(0b00000001,1);
-LCD_SetPos(str1,1);
-sendbyte(0b00000010,1);//0
-sendbyte(0b00000011,1);
-        break;
-    case 1:
-LCD_SetPos(str1,0);
-sendbyte(0b00000001,1);//1
-sendbyte(0b00100000,1);
-LCD_SetPos(str1,1);
-sendbyte(0b00000011,1);//1
-sendbyte(0b00000110,1);
-        break;
-    case 2:
-LCD_SetPos(str1,0);
-sendbyte(0b00000111,1);//2
-sendbyte(0b00000100,1);
-LCD_SetPos(str1,1);
-sendbyte(0b00000101,1);//2
-sendbyte(0b00000110,1);
-        break;
-    case 3:
-LCD_SetPos(str1,0);
-sendbyte(0b00000111,1);//3
-sendbyte(0b00000100,1);
-LCD_SetPos(str1,1);
-sendbyte(0b00000110,1);//3
-sendbyte(0b00000011,1);
-        break;
-    case 4:
-LCD_SetPos(str1,0);
-sendbyte(0b00000010,1);//4
-sendbyte(0b00000011,1);
-LCD_SetPos(str1,1);
-sendbyte(0b00100000,1);//4
-sendbyte(0b00000001,1);
-        break;
-    case 5:
-LCD_SetPos(str1,0);
-sendbyte(0b00000101,1);//5
-sendbyte(0b00000111,1);
-LCD_SetPos(str1,1);
-sendbyte(0b00000110,1);//5
-sendbyte(0b00000100,1);
-        break;
-    case 6:
-LCD_SetPos(str1,0);
-sendbyte(0b00000000,1);//6
-sendbyte(0b00100000,1);
-LCD_SetPos(str1,1);
-sendbyte(0b00000101,1);//6
-sendbyte(0b00000100,1);
-        break;
-    case 7:
-LCD_SetPos(str1,0);
-sendbyte(0b00000111,1);//7
-sendbyte(0b00000001,1);
-LCD_SetPos(str1,1);
-sendbyte(0b00100000,1);//7
-sendbyte(0b00000001,1);
-        break;
-    case 8:
-LCD_SetPos(str1,0);
-sendbyte(0b00000101,1);//8
-sendbyte(0b00000100,1);
-LCD_SetPos(str1,1);
-sendbyte(0b00000010,1);//8
-sendbyte(0b00000011,1);        
-        break;
-    case 9:
-LCD_SetPos(str1,0);
-sendbyte(0b00000101,1);//9
-sendbyte(0b00000100,1);//
-LCD_SetPos(str1,1);
-sendbyte(0b00000110,1);//9
-sendbyte(0b00000011,1);
-        break;        
-}  
-}
-//------------Инициализация микросхемы DC1307---------------
-void DS1307init (void){//инициализация микросхемы
-        delay_ms(2);
-        
-    i2c_start ();//отправка посылки СТАРТ
-    I2C_SendByte (dev_addrw);//адрес часовой микросхемы - запись
-    I2C_SendByte (0b00000000);//вызов регистра секунд (0b00000010)
-    I2C_SendByte (0b00000000);//установка секунд 55  01010101
-    i2c_stop ();
-    
-		i2c_start ();//отправка посылки СТАРТ
-    I2C_SendByte (dev_addrw);//адрес часовой микросхемы - запись 
-    I2C_SendByte (0b00000111);//вызов регистра clock out
-    I2C_SendByte (0b00010000);//включение делителя частоты 1Hz
-    i2c_stop ();	
 }
 //-----------------------переключение десятков минут----------------------------
 unsigned char vyb_raz (unsigned char u){
@@ -366,6 +182,7 @@ void button (unsigned char u,unsigned char i){
   }
 }
 //-------------------Пропись дней недели с ПН по ВС---------
+/*
 void Day_Switch (void){
 switch (Weekdays){
     case 0:
@@ -445,7 +262,7 @@ sendbyte(0b10111011,1);//л
 sendbyte(0b10111000,1);//и
 break;
 }      
-}
+}*/
 //--------------------------Включение/выключение будильника-
 void alarm_on (void){
 	 unsigned int butcount = 0;
