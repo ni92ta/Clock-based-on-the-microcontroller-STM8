@@ -38,7 +38,7 @@ unsigned char *p_alarm_3;
 unsigned char *p_alarm_4;
 unsigned char t=0;//Флаг нажатия кнопки
 unsigned char n;//Флаг очистки дисплея
-unsigned char alarm_flag;//Флаг включения будильника
+unsigned char alarm_flag = 0;//Флаг включения будильника
 unsigned char alarm_number = 0b00110001;
  unsigned char DAY_1 = 0b10101000;//ПН
  unsigned char DAY_2 = 0b01001000;//ВТ
@@ -446,6 +446,36 @@ sendbyte(0b10111000,1);//и
 break;
 }      
 }
+//--------------------------Включение/выключение будильника-
+void alarm_on (void){
+	 unsigned int butcount = 0;
+ while((GPIOC->IDR & (1 << 3)) == 0 )
+  { 
+ if(butcount < 40000)//Подавление дребезга
+    {
+      butcount++;
+    }
+    else
+    {
+ if(tul == 0){//установка флага включения будильника
+LCD_SetPos(14,0);		
+sendbyte(0b11101101,1);
+tul = 1;
+tuk = 1;
+alarm_flag = 0;
+break;
+}
+if (tul == 1){//установка флага отключения будильника
+LCD_SetPos(14,0);
+sendbyte(0b00100000,1);
+tul = 0;
+tuk = 0;
+alarm_flag = 1;
+}
+      break;     
+    }   
+    } 
+}
 //--------------------------Вывод на LCD--------------------
 void clk_out (void){//
     unsigned int butcount = 0;
@@ -505,80 +535,32 @@ sendbyte(DAY_2,1);
     }
 //----------Четвёртое нажатие настройка будильника 1-----
 	if (t == 4){
-	    unsigned int butcount = 0;
-			LCD_SetPos(15,0);		
-sendbyte(alarm_number,1);
- while((GPIOC->IDR & (1 << 3)) == 0 )
-  { 
- if(butcount < 40000)//Подавление дребезга
-    {
-      butcount++;
-    }
-    else
-    {
- if(tul == 0){
-LCD_SetPos(14,0);		
-sendbyte(0b11101101,1);
-tul = 1;
-tuk = 1;
-break;
-//sendbyte(alarm_number,1);
-}
-if (tul == 1){
-LCD_SetPos(14,0);
-sendbyte(0b00100000,1);
-tul = 0;
-tuk = 0;
-break;  
-//sendbyte(alarm_number,1);	
-}
-      break;     
-    }   
-    } 
-
-
-	
-	
-
-
+			LCD_SetPos(15,0);
+			sendbyte(alarm_number,1);
+alarm_on();			
 button(hour_alar,4);
         LCD_SetPos(0,0);
 lcd_mask(0);//вывод слова "Будильник"
-        LCD_SetPos(0,1);
+				LCD_SetPos(14,0);
+if (tuk == 1)sendbyte(0b11101101,1);
+else sendbyte(0b00100000,1);
+sendbyte(alarm_number,1);
+LCD_SetPos(0,1);
 lcd_mask (1);//вывод слова "Часы"
-        LCD_SetPos(5,1);
+segment_clear (3);//очистка сегмента
+        LCD_SetPos(7,1);
         sendbyte(alarm_1,1);
         sendbyte(alarm_2,1);
-segment_clear (9);//очистка сегмента
+				sendbyte(0b00111010,1);
+				sendbyte(alarm_3,1);
+				sendbyte(alarm_4,1);
+segment_clear (4);//очистка сегмента
 //РАССКОМЕНТИРОВАТЬ ПОСЛЕ НАЛАДКИ
 //*address_1 = alarm_1;//записываем переменную по адресу ПЗУ  
-//*address_2 = alarm_2;//записываем переменную по адресу ПЗУ		
-		
-}	
-	/*	
-//----------Четвёртое нажатие настройка будильника , часы---
-    if (t == 4){
-button(hour_alar,4);
-        LCD_SetPos(0,0);
-lcd_mask(0);//вывод слова "Будильник"
-        LCD_SetPos(0,1);
-lcd_mask (1);//вывод слова "Часы"
-        LCD_SetPos(5,1);
-        sendbyte(alarm_1,1);
-        sendbyte(alarm_2,1);
-segment_clear (9);//очистка сегмента
-
-    i2c_start ();//отправка посылки СТАРТ
-    I2C_SendByte (dev_addrw);//адрес часовой микросхемы - запись 
-    I2C_SendByte (0b00001000);//вызов регистра ROM ОЗУ
-    I2C_SendByte (alarm_1);//
-	  I2C_SendByte (alarm_2);//	
-    i2c_stop ();
-*address_1 = alarm_1;//записываем переменную по адресу ПЗУ
-*address_2 = alarm_2;//записываем переменную по адресу ПЗУ
-     }
-//--------------Пятое нажатие настройка будильника, минуты--
-    if (t == 5){
+//*address_2 = alarm_2;//записываем переменную по адресу ПЗУ	
+}
+if (t == 5){
+	alarm_on();	
         button(alarm_number,5);
         LCD_SetPos(0,0);
 lcd_mask(0);//вывод слова "Будильник"
@@ -586,11 +568,16 @@ lcd_mask(0);//вывод слова "Будильник"
 lcd_mask(2);//вывод слова "Минуты"
 segment_clear (1);//очистка сегмента
         LCD_SetPos(7,1);
+        sendbyte(alarm_1,1);
+        sendbyte(alarm_2,1);
+				sendbyte(0b00111010,1);				
         sendbyte(alarm_3,1);
         sendbyte(alarm_4,1);
-*address_3 = alarm_3;//записываем переменную по адресу ПЗУ
-*address_4 = alarm_4;//записываем переменную по адресу ПЗУ
-    }*/
+				segment_clear (4);//очистка сегмента
+//РАССКОМЕНТИРОВАТЬ ПОСЛЕ НАЛАДКИ				
+//*address_3 = alarm_3;//записываем переменную по адресу ПЗУ
+//*address_4 = alarm_4;//записываем переменную по адресу ПЗУ
+    }
 //--------------Вывод на дисплей--------------------
 if (t == 0){
     Day_Switch ();
@@ -610,8 +597,7 @@ sendbyte(0b11011111,1);
 digit_out(secd, 10);
 digit_out(sece, 12);
 LCD_SetPos(14,0);
-if (tuk = 1){
-sendbyte(0b11101101,1);}
+if (tuk == 1)sendbyte(0b11101101,1);
 else sendbyte(0b00100000,1);
 sendbyte(alarm_number,1);
 LCD_SetPos(14,1);
@@ -627,9 +613,6 @@ unsigned char x;
     sendbyte(pot[x],1);
 }
 }
-
-
-
 
 main()
 {
@@ -676,7 +659,7 @@ main()
 	alarm_3 = *address_3;//присваимавем переменной alarm_3 адрес в ПЗУ EEPROM
 	alarm_4 = *address_4;//присваимавем переменной alarm_4 адрес в ПЗУ EEPROM
 	while (1){
-		
+	unsigned char reset_alarm_flag;	
 	i2c_start();//отправка посылки СТАРТ
       I2C_SendByte (dev_addrw);//адрес часовой микросхемы - запись
       I2C_SendByte (0b00000000);//вызов регистра секунд (0b00000010)
@@ -698,8 +681,10 @@ main()
       Weekdays = RTC_ConvertFromDec(Weekdays);
       hourd_alar = RTC_ConvertFromDec(hour_alar);
       houre_alar = RTC_ConvertFromDecd(hour_alar,1);	
-			
-	//while((GPIOC->IDR & (1 << 7)) == 0 ){
+	
+
+
+//------модуль запуска ds1307 при сбросе питания------------
 		while(watchdog == 0){
     i2c_start ();//отправка посылки СТАРТ
     I2C_SendByte (dev_addrw);//адрес часовой микросхемы - запись
@@ -708,23 +693,24 @@ main()
     i2c_stop ();
 		watchdog = 1;
 }
-	
+//----------------------------------------------------------
 if (Weekdays > 0b00000110) Weekdays = 0;
-if (hour == 0 && min == 0 && sec == 0b00000010) alarm_flag = 0;
+//if (hour == 0 && min == 0 && sec == 0b00000010) alarm_flag = 0;
 hour_alar = (((alarm_1 << 4) & 0b00110000)) | (alarm_2 & 0b00001111);// & alarm_2;
 min_alar = (((alarm_3 << 4) & 0b00110000)) | (alarm_4 & 0b00001111);// & alarm_2;
 
-//модуль запуска ds1307 при сбросе питания
+
 clk_out ();
 if (hour_alar == hour && alarm_flag == 0){
     if (min_alar == min) GPIOA->ODR |=  (1<<3);
 }
-
+//----------------------------------------------------------
 if ((GPIOC->IDR & (1 << 3)) == 0){//отключение будильника
+reset_alarm_flag = mine;
     GPIOA->ODR &=  ~(1<<3);
     alarm_flag = 1;
 }
-//&0x004000 = alarm_1;
+if (reset_alarm_flag == (reset_alarm_flag + 1)) alarm_flag = 0;
 
 		
 	/*if ((GPIOC->IDR & (1 << 3)) == 0 ) tio = 1;
