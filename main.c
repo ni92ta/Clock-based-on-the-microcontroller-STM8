@@ -29,6 +29,7 @@ unsigned char *address_1 = (unsigned char*)0x4000;// = 0x4000; присваиваем адрес
 unsigned char *address_2 = (unsigned char*)0x4001;// = 0x4000;
 unsigned char *address_3 = (unsigned char*)0x4002;// = 0x4000;
 unsigned char *address_4 = (unsigned char*)0x4003;// = 0x4000;
+unsigned char *address_5 = (unsigned char*)0x4004;// = 0x4000;
 unsigned char alarm_1;//= 0b00110000;
 unsigned char alarm_2;// = 0b00110000;
 unsigned char alarm_3;// = 0b00110000;
@@ -37,9 +38,10 @@ unsigned char *p_alarm_1;
 unsigned char *p_alarm_2;
 unsigned char *p_alarm_3;
 unsigned char *p_alarm_4;
+unsigned char *p_alarm_flag;
 unsigned char t=0;//Флаг нажатия кнопки
 unsigned char n;//Флаг очистки дисплея
-unsigned char alarm_flag = 0;//Флаг включения будильника
+unsigned char alarm_flag;//Флаг включения будильника
 unsigned char alarm_number = 0b00110001;
  //unsigned char DAY_1 = 0b10101000;//ПН
  //unsigned char DAY_2 = 0b01001000;//ВТ
@@ -184,7 +186,7 @@ void button (unsigned char u,unsigned char i){
 //--------------------------Включение/выключение будильника-
 void alarm_on (void){
 	 unsigned int butcount = 0;
- while((GPIOC->IDR & (1 << 3)) == 0 )
+ while((GPIOC->IDR & (1 << 4)) == 0 )
   { 
  if(butcount < 40000)//Подавление дребезга
     {
@@ -204,7 +206,7 @@ if (tul == 1){//установка флага отключения будильника
 LCD_SetPos(14,0);
 sendbyte(0b00100000,1);
 tul = 0;
-tuk = 0;
+//tuk = 0;
 alarm_flag = 1;
 }
       break;     
@@ -430,14 +432,14 @@ main()
 }
 //----------------------------------------------------------
 if (Weekdays > 0b00000110) Weekdays = 0;
-//if (hour == 0 && min == 0 && sec == 0b00000010) alarm_flag = 0;
+if (hour == 0 && min == 0 && sec == 0b00000010) alarm_flag = 0;
 hour_alar = (((alarm_1 << 4) & 0b00110000)) | (alarm_2 & 0b00001111);// & alarm_2;
 min_alar = (((alarm_3 << 4) & 0b00110000)) | (alarm_4 & 0b00001111);// & alarm_2;
 
-
+//GPIOA->ODR |=  (1<<3);
 clk_out ();
 if (hour_alar == hour && alarm_flag == 0){
-    if (min_alar == min) GPIOA->ODR |=  (1<<3);
+    if (min_alar == min) GPIOA->ODR |=  (1<<3);//включение сигнала будилиника
 }
 //----------------------------------------------------------
 if ((GPIOC->IDR & (1 << 3)) == 0){//отключение будильника
@@ -445,7 +447,7 @@ reset_alarm_flag = mine;
     GPIOA->ODR &=  ~(1<<3);
     alarm_flag = 1;
 }
-if (reset_alarm_flag == (reset_alarm_flag + 1)) alarm_flag = 0;
+//if (reset_alarm_flag == (reset_alarm_flag + 1)) alarm_flag = 0;
 
 		
 	/*if ((GPIOC->IDR & (1 << 3)) == 0 ) tio = 1;
