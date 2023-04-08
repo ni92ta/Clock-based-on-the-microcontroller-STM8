@@ -141,19 +141,19 @@ void button (unsigned char u,unsigned char i){
     }
     else
     {   
-    if (i == 1){//настройка минут
+    if (i == 3){//настройка минут
     vyb_raz (u);
     sending_data (0b00000001, minee);
     } 
-    if (i == 2){//настройка часов
+    if (i == 4){//настройка часов
     vyb_raz_h (u);
     sending_data (0b00000010, houree);
     }
-    if (i == 3){//настройка дня недели
+    if (i == 5){//настройка дня недели
     Weekdays ++;
     sending_data (0b00000011, Weekdays); 
     }
-         if (i == 4){//настройка будильника - часы
+         if (i == 1){//настройка будильника - часы
              alarm_2 ++;
                 if (alarm_1 == 0b00110010 && alarm_2 == 0b00110100){//если часы > 23, то равно 00 часов
                  alarm_1 = 0b00110000;
@@ -168,7 +168,7 @@ void button (unsigned char u,unsigned char i){
              alarm_2 = 0b00110000;
              } 
     } 
-          if (i == 5){//настройка будильника - минуты
+          if (i == 2){//настройка будильника - минуты
             alarm_4 ++;
             if (alarm_4 == 0b00111010) {
                 alarm_4 = 0b00110000;
@@ -206,7 +206,7 @@ if (tul == 1){//установка флага отключения будильника
 LCD_SetPos(14,0);
 sendbyte(0b00100000,1);
 tul = 0;
-//tuk = 0;
+tuk = 0;
 alarm_flag = 1;
 }
       break;     
@@ -228,56 +228,16 @@ void clk_out (void){//
 			if (t > 5) t = 0;//установка флага режима настройки для перехода к следующему пункту меню
       break;     
     }   
-    }    
-//--------------Первое нажатие настройка минут--------------
-if (t == 1){
-digit_out(hourd, 0);//hourd
-digit_out(houre, 2);//houre
-button(min,1);//вызов функции изменения значения
-digit_out(mind, 5);
-digit_out(mine, 7);
-LCD_SetPos(9,0);
-segment_clear (7);//очистка сегмента
-LCD_SetPos(9,1);
-segment_clear (1);//очистка сегмента
-lcd_mask(2);//вывод слова "Минуты"
-    }
-//--------------Второе нажатие настройка часа-------
-    if (t == 2){
-       // n = 0;????????????
-button(hour,2);//вызов функции изменения значения
-digit_out(hourd, 0);//hourd
-digit_out(houre, 2);//houre		
-digit_out(mind, 5);
-digit_out(mine, 7);
-LCD_SetPos(9,0);
-segment_clear (7);//очистка сегмента
-LCD_SetPos(9,1);
-segment_clear (1);//очистка сегмента
-lcd_mask (1);//вывод слова "Часы"				
-segment_clear (2);//очистка сегмента	
-    }
-    //--------------Третье нажатие настройка дня недели-----
-    if (t == 3){
-button(Weekdays,3);
-LCD_SetPos(0,0);
-segment_clear (16);//очистка сегмента
-LCD_SetPos(0,1);
-lcd_mask(3);//вывод слова "День недели"
-segment_clear (3);//очистка сегмента
-Day_Switch ();
-LCD_SetPos(14,1);
-sendbyte(DAY_1,1);
-sendbyte(DAY_2,1);
-    }
+    }  
 //----------Четвёртое нажатие настройка будильника 1-----
-	if (t == 4){
+	if (t == 1){
 			LCD_SetPos(15,0);
 			sendbyte(alarm_number,1);
 alarm_on();			
-button(hour_alar,4);
+button(hour_alar,1);
         LCD_SetPos(0,0);
 lcd_mask(0);//вывод слова "Будильник"
+segment_clear (5);//очистка сегмента
 				LCD_SetPos(14,0);
 if (tuk == 1)sendbyte(0b11101101,1);
 else sendbyte(0b00100000,1);
@@ -296,9 +256,9 @@ segment_clear (4);//очистка сегмента
 //*address_1 = alarm_1;//записываем переменную по адресу ПЗУ  
 //*address_2 = alarm_2;//записываем переменную по адресу ПЗУ	
 }
-if (t == 5){
+if (t == 2){
 	alarm_on();	
-        button(alarm_number,5);
+        button(alarm_number,2);
         LCD_SetPos(0,0);
 lcd_mask(0);//вывод слова "Будильник"
         LCD_SetPos(0,1);
@@ -314,7 +274,56 @@ segment_clear (1);//очистка сегмента
 //РАССКОМЕНТИРОВАТЬ ПОСЛЕ НАЛАДКИ				
 //*address_3 = alarm_3;//записываем переменную по адресу ПЗУ
 //*address_4 = alarm_4;//записываем переменную по адресу ПЗУ
+    }		
+//--------------Первое нажатие настройка минут--------------
+if (t == 3){
+	button(min,3);//вызов функции изменения значения
+digit_out(hourd, 0);//hourd
+digit_out(houre, 2);//houre
+LCD_SetPos(4,0);
+sendbyte(0b00101110,1);//вывод двоеточия
+LCD_SetPos(4,1);
+sendbyte(0b11011111,1);//вывод двоеточия
+
+digit_out(mind, 5);
+digit_out(mine, 7);
+
+
+LCD_SetPos(9,0);
+segment_clear (7);//очистка сегмента
+LCD_SetPos(9,1);
+segment_clear (1);//очистка сегмента
+lcd_mask(2);//вывод слова "Минуты"
     }
+//--------------Второе нажатие настройка часа-------
+    if (t == 4){
+       // n = 0;????????????
+button(hour,4);//вызов функции изменения значения
+digit_out(hourd, 0);//hourd
+digit_out(houre, 2);//houre		
+digit_out(mind, 5);
+digit_out(mine, 7);
+LCD_SetPos(9,0);
+segment_clear (7);//очистка сегмента
+LCD_SetPos(9,1);
+segment_clear (1);//очистка сегмента
+lcd_mask (1);//вывод слова "Часы"				
+segment_clear (2);//очистка сегмента	
+    }
+    //--------------Третье нажатие настройка дня недели-----
+    if (t == 5){
+button(Weekdays,5);
+LCD_SetPos(0,0);
+segment_clear (16);//очистка сегмента
+LCD_SetPos(0,1);
+lcd_mask(3);//вывод слова "День недели"
+segment_clear (3);//очистка сегмента
+Day_Switch ();
+LCD_SetPos(14,1);
+sendbyte(DAY_1,1);
+sendbyte(DAY_2,1);
+    }
+
 //--------------Вывод на дисплей--------------------
 if (t == 0){
     Day_Switch ();
@@ -328,9 +337,9 @@ sendbyte(0b11011111,1);
 digit_out(mind, 5);
 digit_out(mine, 7);
 LCD_SetPos(9,0);
-sendbyte(0b00101110,1);
+sendbyte(0b00101110,1);//вывод двоеточия
 LCD_SetPos(9,1);
-sendbyte(0b11011111,1);
+sendbyte(0b11011111,1);//вывод двоеточия
 digit_out(secd, 10);
 digit_out(sece, 12);
 LCD_SetPos(14,0);
@@ -436,8 +445,12 @@ if (hour == 0 && min == 0 && sec == 0b00000010) alarm_flag = 0;
 hour_alar = (((alarm_1 << 4) & 0b00110000)) | (alarm_2 & 0b00001111);// & alarm_2;
 min_alar = (((alarm_3 << 4) & 0b00110000)) | (alarm_4 & 0b00001111);// & alarm_2;
 
+LCD_SetPos(0,1);
+lcd_mask(3);//вывод слова "День недели"
+
+
 //GPIOA->ODR |=  (1<<3);
-clk_out ();
+//clk_out ();
 if (hour_alar == hour && alarm_flag == 0){
     if (min_alar == min) GPIOA->ODR |=  (1<<3);//включение сигнала будилиника
 }
