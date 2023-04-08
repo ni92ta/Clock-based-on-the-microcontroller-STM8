@@ -39,7 +39,7 @@ unsigned char *p_alarm_2;
 unsigned char *p_alarm_3;
 unsigned char *p_alarm_4;
 unsigned char *p_alarm_flag;
-unsigned char t=0;//Флаг нажатия кнопки
+unsigned char t = 0;//Флаг нажатия кнопки
 unsigned char n;//Флаг очистки дисплея
 unsigned char alarm_flag;//Флаг включения будильника
 unsigned char alarm_number = 0b00110001;
@@ -135,7 +135,7 @@ void button (unsigned char u,unsigned char i){
   unsigned int butcount=0;
   while((GPIOC->IDR & (1 << 5)) == 0 )
   { 
-    if(butcount < 40000)
+    if(butcount < 35000)
     {
       butcount++;//Пауза для подавления дребезга
     }
@@ -188,7 +188,7 @@ void alarm_on (void){
 	 unsigned int butcount = 0;
  while((GPIOC->IDR & (1 << 4)) == 0 )
   { 
- if(butcount < 40000)//Подавление дребезга
+ if(butcount < 35000)//Подавление дребезга
     {
       butcount++;
     }
@@ -218,7 +218,7 @@ void clk_out (void){//
     unsigned int butcount = 0;
  while((GPIOC->IDR & (1 << 6)) == 0 )
   { 
- if(butcount < 40000)//Подавление дребезга
+ if(butcount < 35000)//Подавление дребезга
     {
       butcount++;
     }
@@ -366,7 +366,7 @@ main()
 //IDR регистр входных данных
 //DDR регистр направления данных
 //Настройка портов
-	CLK->CKDIVR = 0b00000000; //Делитель частоты внутреннего осцилятора = 8; тактовой частоты ЦПУ -128
+	CLK->CKDIVR = 0b00000001; //Делитель частоты внутреннего осцилятора = 8; тактовой частоты ЦПУ -128
 	
 	GPIOA->DDR |= (1<<3) | (1<<2) | (1<<1);// | (1<<5) | (1<<4) | (1<<3);//Выход
 	GPIOA->CR1 |= (1<<3) | (1<<2) | (1<<1);// | (1<<5) | (1<<4) | (1<<3);//Выход типа Push-pull
@@ -398,12 +398,21 @@ main()
   sets_CGRAM (str06);
   sets_CGRAM (str07);
   sets_CGRAM (str08);
-	sendbyte(0b00000001,0);//очистка дисплея*/
+	sendbyte(0b00000001,0);//очистка дисплея
 	
 	alarm_1 = *address_1;//присваимавем переменной alarm_1 адрес в ПЗУ EEPROM
 	alarm_2 = *address_2;//присваимавем переменной alarm_2 адрес в ПЗУ EEPROM
 	alarm_3 = *address_3;//присваимавем переменной alarm_3 адрес в ПЗУ EEPROM
 	alarm_4 = *address_4;//присваимавем переменной alarm_4 адрес в ПЗУ EEPROM
+	
+	
+//	LCD_SetPos(0,0);
+ // lcd_mask(3);//вывод слова "День недели"
+	/*sendbyte(0b00101100,1);
+	sendbyte(0b00101100,1);
+	sendbyte(0b00101100,1);
+	sendbyte(0b00101100,1);
+	*/
 	while (1){
 	unsigned char reset_alarm_flag;	
 	i2c_start();//отправка посылки СТАРТ
@@ -444,13 +453,13 @@ if (Weekdays > 0b00000110) Weekdays = 0;
 if (hour == 0 && min == 0 && sec == 0b00000010) alarm_flag = 0;
 hour_alar = (((alarm_1 << 4) & 0b00110000)) | (alarm_2 & 0b00001111);// & alarm_2;
 min_alar = (((alarm_3 << 4) & 0b00110000)) | (alarm_4 & 0b00001111);// & alarm_2;
-
-LCD_SetPos(0,1);
-lcd_mask(3);//вывод слова "День недели"
-
-
+/*
+GPIOD->ODR |=  (1<<6) | (1<<5) | (1<<4) | (1<<3) | (1<<2) | (1<<1);
+delay_ms(1000);
+GPIOD->ODR &=  ~((1<<6) | (1<<5) | (1<<4) | (1<<3) | (1<<2) | (1<<1));
+delay_ms(1000);*/
 //GPIOA->ODR |=  (1<<3);
-//clk_out ();
+clk_out ();
 if (hour_alar == hour && alarm_flag == 0){
     if (min_alar == min) GPIOA->ODR |=  (1<<3);//включение сигнала будилиника
 }
@@ -459,6 +468,8 @@ if ((GPIOC->IDR & (1 << 3)) == 0){//отключение будильника
 reset_alarm_flag = mine;
     GPIOA->ODR &=  ~(1<<3);
     alarm_flag = 1;
+		
+		
 }
 //if (reset_alarm_flag == (reset_alarm_flag + 1)) alarm_flag = 0;
 
