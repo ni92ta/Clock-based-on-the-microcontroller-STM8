@@ -255,7 +255,6 @@ sendbyte(0b00100000,1);
 			LCD_SetPos(15,0);
 			sendbyte(alarm_number,1);
 }
-//sendbyte(alarm_number = 0b11010101,1);
 LCD_SetPos(0,1);
 lcd_mask (2);//вывод слова "Минуты"
 segment_clear (3);//очистка сегмента
@@ -300,11 +299,8 @@ LCD_SetPos(4,0);
 sendbyte(0b00101110,1);//вывод двоеточия
 LCD_SetPos(4,1);
 sendbyte(0b11011111,1);//вывод двоеточия
-
 digit_out(mind, 5);
 digit_out(mine, 7);
-
-
 LCD_SetPos(9,0);
 segment_clear (7);//очистка сегмента
 LCD_SetPos(9,1);
@@ -368,7 +364,6 @@ sendbyte(DAY_2,1);//
 }
 }
 //--------------------------------------------------
-
 void sets_CGRAM (char* pot){
 unsigned char x;
   for (x = 0; x <= 7; x++){
