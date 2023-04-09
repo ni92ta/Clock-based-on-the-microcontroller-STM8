@@ -235,14 +235,14 @@ void clk_out (void){//
     }   
     }  
 //----------Четвёртое нажатие настройка будильника 1-----
-	if (t == 1){
+	if (t == 2){
 			LCD_SetPos(15,0);
 			sendbyte(alarm_number,1);
 alarm_on();			
 button(hour_alar,1);
         LCD_SetPos(0,0);
 lcd_mask(0);//вывод слова "Будильник"
-segment_clear (5);//очистка сегмента
+
 				LCD_SetPos(14,0);
 if (tuk == 1)sendbyte(0b11101101,1);
 else sendbyte(0b00100000,1);
@@ -261,11 +261,12 @@ segment_clear (4);//очистка сегмента
 //*address_1 = alarm_1;//записываем переменную по адресу ПЗУ  
 //*address_2 = alarm_2;//записываем переменную по адресу ПЗУ	
 }
-if (t == 2){
+if (t == 1){
 	alarm_on();	
         button(alarm_number,2);
         LCD_SetPos(0,0);
 lcd_mask(0);//вывод слова "Будильник"
+segment_clear (5);//очистка сегмента
         LCD_SetPos(0,1);
 lcd_mask(2);//вывод слова "Минуты"
 segment_clear (1);//очистка сегмента
