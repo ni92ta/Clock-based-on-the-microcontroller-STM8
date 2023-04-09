@@ -9,7 +9,6 @@
  #include "lcd.h"
  #include "main.h"
  #include "void_function.h"
- //#include "lcd.c"
  /*
  Что-то типа - #define TestRam ((unsigned char *)0x0100)
 ну и обращение к ней соответсвенно - *(TestRam) = 0xEE
@@ -58,18 +57,24 @@ unsigned char alarm_number = 0b00110001;
      unsigned char houre;//единицы часов после преобразования
      unsigned char hourd;//десятки часов после преобразования
      unsigned char houre_alar = 0b00110000;//единицы часов будильника после преобразования
-     unsigned char hourd_alar = 0b00110000;//десятки часов будильника после преобразования     
+     unsigned char hourd_alar = 0b00110000;//десятки часов будильника после преобразования
      unsigned char minee;//переменная для настройки минут 
      unsigned char houree;//переменная для настройки часов
      //unsigned char Weekdays;//переменная дня недели до преобразования
-//------------------------------------------------------------------------------
+//----------------------------------------------------------
 void delay_ms(unsigned int set_ms) // Задержка в мс
 {
-	char x;
-   ms = set_ms;
-	 //for (x = 100; x>0; x--){
+   ms = set_ms + 0b11111111;
 	 while (ms--);
- //}
+}
+//-------------Задержка в микросекундах---------------------
+void delay_us(unsigned int set_us) // Задержка в мс
+{
+	unsigned char  us;
+	us = set_us;
+	 us = us>>1;
+	 us = us>>1;
+	 while (us--);
 }
 //--------------Очистка сегмента дисплея--------------------
 void segment_clear (unsigned char num_seg)
@@ -135,9 +140,9 @@ void button (unsigned char u,unsigned char i){
   unsigned int butcount=0;
   while((GPIOC->IDR & (1 << 5)) == 0 )
   { 
-    if(butcount < 35000)
+    if(butcount < 1000)//Пауза для подавления дребезга
     {
-      butcount++;//Пауза для подавления дребезга
+      butcount++;
     }
     else
     {   
@@ -188,7 +193,7 @@ void alarm_on (void){
 	 unsigned int butcount = 0;
  while((GPIOC->IDR & (1 << 4)) == 0 )
   { 
- if(butcount < 35000)//Подавление дребезга
+ if(butcount < 1000)//Пауза для подавления дребезга
     {
       butcount++;
     }
@@ -218,7 +223,7 @@ void clk_out (void){//
     unsigned int butcount = 0;
  while((GPIOC->IDR & (1 << 6)) == 0 )
   { 
- if(butcount < 35000)//Подавление дребезга
+ if(butcount < 1000)//Пауза для подавления дребезга
     {
       butcount++;
     }
@@ -366,7 +371,12 @@ main()
 //IDR регистр входных данных
 //DDR регистр направления данных
 //Настройка портов
-	CLK->CKDIVR = 0b00000001; //Делитель частоты внутреннего осцилятора = 8; тактовой частоты ЦПУ -128
+  CLK->ECKR |= (1<<0);//Включение HSE осцилятора
+	CLK->SWCR |= (1<<1);//Разрешаем переключить источник тактирования
+while(CLK->ECKR & (1<<1) == 1){}//Ждем готовности источника тактирования
+	CLK->CKDIVR = 0b00000001;//Делитель частоты внутреннего осцилятора = 0; тактовой частоты ЦПУ -2
+  CLK->SWR = 0b10110100;//HSE основной источник синхронизации
+while (CLK->SWCR & (1<<1) == 1){}// Ждем готовности переключения
 	
 	GPIOA->DDR |= (1<<3) | (1<<2) | (1<<1);// | (1<<5) | (1<<4) | (1<<3);//Выход
 	GPIOA->CR1 |= (1<<3) | (1<<2) | (1<<1);// | (1<<5) | (1<<4) | (1<<3);//Выход типа Push-pull
@@ -383,12 +393,12 @@ main()
 	FLASH->DUKR = 0b10101110;
 	FLASH->DUKR = 0b01010110;
 	
-	delay_ms(50);
+	delay_ms(5);
 	DS1307init();
 
-	delay_ms(50);
+	delay_ms(5);
 	LCD_Init();
-	delay_ms(50);
+	delay_ms(5);
 	sendbyte(0b01000000,0);//sets CGRAM address
   sets_CGRAM (str01);
   sets_CGRAM (str02);
@@ -455,9 +465,9 @@ hour_alar = (((alarm_1 << 4) & 0b00110000)) | (alarm_2 & 0b00001111);// & alarm_
 min_alar = (((alarm_3 << 4) & 0b00110000)) | (alarm_4 & 0b00001111);// & alarm_2;
 /*
 GPIOD->ODR |=  (1<<6) | (1<<5) | (1<<4) | (1<<3) | (1<<2) | (1<<1);
-delay_ms(1000);
+delay_us(10);
 GPIOD->ODR &=  ~((1<<6) | (1<<5) | (1<<4) | (1<<3) | (1<<2) | (1<<1));
-delay_ms(1000);*/
+delay_us(10);*/
 //GPIOA->ODR |=  (1<<3);
 clk_out ();
 if (hour_alar == hour && alarm_flag == 0){
