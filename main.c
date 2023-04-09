@@ -41,7 +41,7 @@ unsigned char *p_alarm_flag;
 unsigned char t = 0;//Флаг нажатия кнопки
 unsigned char n;//Флаг очистки дисплея
 unsigned char alarm_flag;//Флаг включения будильника
-unsigned char alarm_number = 0b00110001;
+unsigned char alarm_number = 0b11010101;// = 0b00110001;
  //unsigned char DAY_1 = 0b10101000;//ПН
  //unsigned char DAY_2 = 0b01001000;//ВТ
      unsigned char sece;//единицы секунд
@@ -205,6 +205,7 @@ sendbyte(0b11101101,1);
 tul = 1;
 tuk = 1;
 alarm_flag = 0;
+alarm_number = 0b00110001;
 break;
 }
 if (tul == 1){//установка флага отключения будильника
@@ -213,6 +214,7 @@ sendbyte(0b00100000,1);
 tul = 0;
 tuk = 0;
 alarm_flag = 1;
+alarm_number = 0b11010101;
 }
       break;     
     }   
@@ -235,20 +237,27 @@ void clk_out (void){//
     }   
     }  
 //----------Четвёртое нажатие настройка будильника 1-----
-	if (t == 2){
-			LCD_SetPos(15,0);
-			sendbyte(alarm_number,1);
+	if (t == 1){
+
 alarm_on();			
-button(hour_alar,1);
+button(min_alar,2);
         LCD_SetPos(0,0);
 lcd_mask(0);//вывод слова "Будильник"
-
+segment_clear (5);//очистка сегмента
 				LCD_SetPos(14,0);
-if (tuk == 1)sendbyte(0b11101101,1);
-else sendbyte(0b00100000,1);
-sendbyte(alarm_number,1);
+if (tuk == 1){
+sendbyte(0b11101101,1);
+			LCD_SetPos(15,0);
+			sendbyte(alarm_number,1);
+}
+else{
+sendbyte(0b00100000,1);
+			LCD_SetPos(15,0);
+			sendbyte(alarm_number,1);
+}
+//sendbyte(alarm_number = 0b11010101,1);
 LCD_SetPos(0,1);
-lcd_mask (1);//вывод слова "Часы"
+lcd_mask (2);//вывод слова "Минуты"
 segment_clear (3);//очистка сегмента
         LCD_SetPos(7,1);
         sendbyte(alarm_1,1);
@@ -258,18 +267,17 @@ segment_clear (3);//очистка сегмента
 				sendbyte(alarm_4,1);
 segment_clear (4);//очистка сегмента
 //РАССКОМЕНТИРОВАТЬ ПОСЛЕ НАЛАДКИ
-//*address_1 = alarm_1;//записываем переменную по адресу ПЗУ  
-//*address_2 = alarm_2;//записываем переменную по адресу ПЗУ	
+//*address_3 = alarm_3;//записываем переменную по адресу ПЗУ  
+//*address_4 = alarm_4;//записываем переменную по адресу ПЗУ	
 }
-if (t == 1){
+if (t == 2){
 	alarm_on();	
-        button(alarm_number,2);
+        button(hour_alar,1);
         LCD_SetPos(0,0);
 lcd_mask(0);//вывод слова "Будильник"
-segment_clear (5);//очистка сегмента
         LCD_SetPos(0,1);
-lcd_mask(2);//вывод слова "Минуты"
-segment_clear (1);//очистка сегмента
+lcd_mask(1);//вывод слова "Часы"
+segment_clear (2);//очистка сегмента
         LCD_SetPos(7,1);
         sendbyte(alarm_1,1);
         sendbyte(alarm_2,1);
@@ -277,9 +285,11 @@ segment_clear (1);//очистка сегмента
         sendbyte(alarm_3,1);
         sendbyte(alarm_4,1);
 				segment_clear (4);//очистка сегмента
+							LCD_SetPos(15,0);
+			sendbyte(alarm_number,1);
 //РАССКОМЕНТИРОВАТЬ ПОСЛЕ НАЛАДКИ				
-//*address_3 = alarm_3;//записываем переменную по адресу ПЗУ
-//*address_4 = alarm_4;//записываем переменную по адресу ПЗУ
+//*address_1 = alarm_1;//записываем переменную по адресу ПЗУ
+//*address_2 = alarm_2;//записываем переменную по адресу ПЗУ
     }		
 //--------------Первое нажатие настройка минут--------------
 if (t == 3){
@@ -394,12 +404,12 @@ while (CLK->SWCR & (1<<1) == 1){}// Ждем готовности переключения
 	FLASH->DUKR = 0b10101110;
 	FLASH->DUKR = 0b01010110;
 	
-	delay_ms(5);
+	delay_ms(1);
 	DS1307init();
 
-	delay_ms(5);
+	delay_ms(1);
 	LCD_Init();
-	delay_ms(5);
+	delay_ms(1);
 	sendbyte(0b01000000,0);//sets CGRAM address
   sets_CGRAM (str01);
   sets_CGRAM (str02);
@@ -415,17 +425,10 @@ while (CLK->SWCR & (1<<1) == 1){}// Ждем готовности переключения
 	alarm_2 = *address_2;//присваимавем переменной alarm_2 адрес в ПЗУ EEPROM
 	alarm_3 = *address_3;//присваимавем переменной alarm_3 адрес в ПЗУ EEPROM
 	alarm_4 = *address_4;//присваимавем переменной alarm_4 адрес в ПЗУ EEPROM
+//	p_alarm_flag = *address_5;
 	
-	
-//	LCD_SetPos(0,0);
- // lcd_mask(3);//вывод слова "День недели"
-	/*sendbyte(0b00101100,1);
-	sendbyte(0b00101100,1);
-	sendbyte(0b00101100,1);
-	sendbyte(0b00101100,1);
-	*/
 	while (1){
-	unsigned char reset_alarm_flag;	
+//	unsigned char reset_alarm_flag;	
 	i2c_start();//отправка посылки СТАРТ
       I2C_SendByte (dev_addrw);//адрес часовой микросхемы - запись
       I2C_SendByte (0b00000000);//вызов регистра секунд (0b00000010)
@@ -447,9 +450,6 @@ while (CLK->SWCR & (1<<1) == 1){}// Ждем готовности переключения
       Weekdays = RTC_ConvertFromDec(Weekdays);
       hourd_alar = RTC_ConvertFromDec(hour_alar);
       houre_alar = RTC_ConvertFromDecd(hour_alar,1);	
-	
-
-
 //------модуль запуска ds1307 при сбросе питания------------
 		while(watchdog == 0){
     i2c_start ();//отправка посылки СТАРТ
@@ -470,60 +470,19 @@ delay_us(10);
 GPIOD->ODR &=  ~((1<<6) | (1<<5) | (1<<4) | (1<<3) | (1<<2) | (1<<1));
 delay_us(10);*/
 //GPIOA->ODR |=  (1<<3);
+//Расскоментировать после наладки
+//*address_5 = alarm_flag;//
 clk_out ();
 if (hour_alar == hour && alarm_flag == 0){
     if (min_alar == min) GPIOA->ODR |=  (1<<3);//включение сигнала будилиника
 }
 //----------------------------------------------------------
 if ((GPIOC->IDR & (1 << 3)) == 0){//отключение будильника
-reset_alarm_flag = mine;
+//reset_alarm_flag = mine;
     GPIOA->ODR &=  ~(1<<3);
     alarm_flag = 1;
-		
-		
 }
-//if (reset_alarm_flag == (reset_alarm_flag + 1)) alarm_flag = 0;
-
-		
-	/*if ((GPIOC->IDR & (1 << 3)) == 0 ) tio = 1;
-	if ((GPIOC->IDR & (1 << 4)) == 0 ) tio = 0;
-	if (tio == 0) GPIOA->ODR |=  (1<<3);
-	if (tio == 1){
-	GPIOD->ODR |= (1<<5) | (1<<4) | (1<<3);
-	delay_ms(22);
-	GPIOD->ODR &=  ~((1<<5) | (1<<4) | (1<<3));
-	delay_ms(22);
-	GPIOA->ODR &=  ~(1<<3);	
-}*/
-
-	}
+}
 }
 
 
-/*
-//-----------------------------------------------------------
-__STATIC_INLINE void Delay_us (uint32_t __IO us) //Функция задержки в микросекундах us
-{
-us *=(SystemCoreClock/1000000)/5;
-	while(us--);
-}
-
-
-	if ((GPIOC->IDR & (1 << 3)) == 0 ) t = 1;
-	if ((GPIOC->IDR & (1 << 4)) == 0 ) t = 0;
-	if (t == 0) GPIOA->ODR |=  (1<<3);
-	if (t == 1){
-	GPIOD->ODR |= (1<<5) | (1<<4) | (1<<3);
-	delay_ms(1000);
-	GPIOD->ODR &=  ~((1<<5) | (1<<4) | (1<<3));
-	delay_ms(1000);
-	GPIOA->ODR &=  ~(1<<3);	
-}
-
-
-
-
-int a=1;
-int *p = (int*)0x12345678;
-*p=a;
-*/
