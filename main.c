@@ -33,10 +33,22 @@ unsigned char alarm_1;//= 0b00110000;
 unsigned char alarm_2;// = 0b00110000;
 unsigned char alarm_3;// = 0b00110000;
 unsigned char alarm_4;// = 0b00110001;
-unsigned char *p_alarm_1;
-unsigned char *p_alarm_2;
-unsigned char *p_alarm_3;
-unsigned char *p_alarm_4;
+
+unsigned char alarm_5;//= 0b00110000;
+unsigned char alarm_6;// = 0b00110000;
+unsigned char alarm_7;// = 0b00110000;
+unsigned char alarm_8;// = 0b00110001;
+
+unsigned char *p_alarm_1;//десятки часов, будильник 1
+unsigned char *p_alarm_2;//единицы часов, будильник 1
+unsigned char *p_alarm_3;//десятки минут, будильник 1
+unsigned char *p_alarm_4;//единицы минут, будильник 1
+
+unsigned char *p_alarm_5;
+unsigned char *p_alarm_6;
+unsigned char *p_alarm_7;
+unsigned char *p_alarm_8;
+
 unsigned char *p_alarm_flag;
 unsigned char t = 0;//Флаг нажатия кнопки
 unsigned char tt = 0;//Флаг нажатия кнопки перехода на настройки минут
@@ -233,13 +245,12 @@ void clk_out (void){//
     else
     {
   t++;
-			if (t > 6) t = 0;//установка флага режима настройки для перехода к следующему пункту меню
+			if (t > 7) t = 0;//установка флага режима настройки для перехода к следующему пункту меню
       break;     
     }   
     }  
 //----------Первое нажатие настройка будильника 1-----
 	if (t == 1){
-
 alarm_on();			
 button(min_alar,2);
         LCD_SetPos(0,0);
@@ -269,12 +280,11 @@ segment_clear (4);//очистка сегмента
 //РАССКОМЕНТИРОВАТЬ ПОСЛЕ НАЛАДКИ
 //*address_3 = alarm_3;//записываем переменную по адресу ПЗУ  
 //*address_4 = alarm_4;//записываем переменную по адресу ПЗУ
-
-
 }
 
 while((GPIOC->IDR & (1 << 7)) == 0 )
   { 
+	
  if(butcount < 1000)//Пауза для подавления дребезга
     {
       butcount++;
@@ -286,6 +296,10 @@ while((GPIOC->IDR & (1 << 7)) == 0 )
     }   
     }  
 if (tt == 2){
+	while((GPIOC->IDR & (1 << 6)) == 0 ) {
+		tt = 0;
+	t = 1;		
+	}
 alarm_on();	
         button(hour_alar,1);
         LCD_SetPos(0,0);
@@ -306,10 +320,58 @@ segment_clear (2);//очистка сегмента
 //*address_1 = alarm_1;//записываем переменную по адресу ПЗУ
 //*address_2 = alarm_2;//записываем переменную по адресу ПЗУ
 }
+//--------------Второе нажатие настройка будильника 2-------
+	if (t == 2){
+alarm_on();			
+button(min_alar,2);
+        LCD_SetPos(0,0);
+lcd_mask(0);//вывод слова "Будильник"
+segment_clear (5);//очистка сегмента
+				LCD_SetPos(14,0);
+if (tuk == 1){
+sendbyte(0b11101101,1);
+			LCD_SetPos(15,0);
+			sendbyte(alarm_number,1);
+}
+else{
+sendbyte(0b00100000,1);
+			LCD_SetPos(15,0);
+			sendbyte(alarm_number,1);
+}
+LCD_SetPos(0,1);
+lcd_mask (2);//вывод слова "Минуты"
+segment_clear (3);//очистка сегмента
+        LCD_SetPos(7,1);
+        sendbyte(alarm_5,1);
+        sendbyte(alarm_6,1);
+				sendbyte(0b00111010,1);
+				sendbyte(alarm_7,1);
+				sendbyte(alarm_8,1);
+segment_clear (4);//очистка сегмента
+//РАССКОМЕНТИРОВАТЬ ПОСЛЕ НАЛАДКИ
+//*address_3 = alarm_3;//записываем переменную по адресу ПЗУ
+//*address_4 = alarm_4;//записываем переменную по адресу ПЗУ
+}
 
-/*
-if (t == 2){
-	alarm_on();	
+while((GPIOC->IDR & (1 << 7)) == 0 )
+  { 
+	
+ if(butcount < 1000)//Пауза для подавления дребезга
+    {
+      butcount++;
+    }
+    else
+    {
+	t = 6;		
+  tt = 3;
+    }   
+    }  
+if (tt == 3){
+	while((GPIOC->IDR & (1 << 6)) == 0 ) {
+		tt = 0;
+	t = 2;		
+	}
+alarm_on();	
         button(hour_alar,1);
         LCD_SetPos(0,0);
 lcd_mask(0);//вывод слова "Будильник"
@@ -317,54 +379,21 @@ lcd_mask(0);//вывод слова "Будильник"
 lcd_mask(1);//вывод слова "Часы"
 segment_clear (2);//очистка сегмента
         LCD_SetPos(7,1);
-        sendbyte(alarm_1,1);
-        sendbyte(alarm_2,1);
+        sendbyte(alarm_5,1);
+        sendbyte(alarm_6,1);
 				sendbyte(0b00111010,1);				
-        sendbyte(alarm_3,1);
-        sendbyte(alarm_4,1);
+        sendbyte(alarm_7,1);
+        sendbyte(alarm_8,1);
 				segment_clear (4);//очистка сегмента
 							LCD_SetPos(15,0);
 			sendbyte(alarm_number,1);
 //РАССКОМЕНТИРОВАТЬ ПОСЛЕ НАЛАДКИ				
 //*address_1 = alarm_1;//записываем переменную по адресу ПЗУ
 //*address_2 = alarm_2;//записываем переменную по адресу ПЗУ
+}
 
-
-    }		*/
-//--------------Второе нажатие настройка минут--------------
-/*
- while((GPIOC->IDR & (1 << 7)) == 0 )
-  { 
- if(butcount < 1000)//Пауза для подавления дребезга
-    {
-      butcount++;
-    }
-    else
-    {
-  
-		button(min,3);//вызов функции изменения значения
-digit_out(hourd, 0);//hourd
-digit_out(houre, 2);//houre
-LCD_SetPos(4,0);
-sendbyte(0b00101110,1);//вывод двоеточия
-LCD_SetPos(4,1);
-sendbyte(0b11011111,1);//вывод двоеточия
-digit_out(mind, 5);
-digit_out(mine, 7);
-LCD_SetPos(9,0);
-segment_clear (7);//очистка сегмента
-LCD_SetPos(9,1);
-segment_clear (1);//очистка сегмента
-lcd_mask(2);//вывод слова "Минуты"
-	
-	
-      break;     
-    }   
-    }  
-
-*/
-
-if (t == 3){
+//----------------------------------------------------------
+if (t == 4){
 	button(min,3);//вызов функции изменения значения
 digit_out(hourd, 0);//hourd
 digit_out(houre, 2);//houre
@@ -382,7 +411,7 @@ lcd_mask(2);//вывод слова "Минуты"
     }
 		
 //--------------Второе нажатие настройка часа-------
-    if (t == 4){
+    if (t == 5){
        // n = 0;????????????
 button(hour,4);//вызов функции изменения значения
 digit_out(hourd, 0);//hourd
@@ -397,7 +426,7 @@ lcd_mask (1);//вывод слова "Часы"
 segment_clear (2);//очистка сегмента	
     }
     //--------------Третье нажатие настройка дня недели-----
-    if (t == 5){
+    if (t == 6){
 button(Weekdays,5);
 LCD_SetPos(0,0);
 segment_clear (16);//очистка сегмента
