@@ -38,3 +38,5 @@ Debug/clock-based-on-the-microcontroller-stm8.elf
 *.ls
 Debug/stm8_interrupt_vector.ls
 *.elf
+*.s19
+*.sm8
