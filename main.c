@@ -56,6 +56,7 @@ unsigned char SB4_push = 0;//Флаг нажатия кнопки переключения часы/минуты будиль
 unsigned char n;//Флаг очистки дисплея
 unsigned char alarm_flag;//Флаг включения будильника
 unsigned char alarm_number = 0b11010101;// = 0b00110001;
+  unsigned int butcount = 0;
  //unsigned char DAY_1 = 0b10101000;//ПН
  //unsigned char DAY_2 = 0b01001000;//ВТ
      unsigned char sece;//единицы секунд
@@ -97,6 +98,48 @@ void segment_clear (unsigned char num_seg)
 	for (; num_seg > 0; num_seg --){//num_seg-количество сегментов для очистки
 	sendbyte(0b00100000,1);//очистка сегмента
 	}
+}
+//----------Определение нажатия кнопки SB4------------------
+void button_push_detection (void)
+{
+while((GPIOC->IDR & (1 << 7)) == 0 )//проверяем, нажата ли кнопка переключения на настройку часа будилника
+  {
+	
+ if(butcount < 1000)//Пауза для подавления дребезга
+    {
+      butcount++;
+    }
+    
+	if (SB4_push == 1) {
+					SB4_push = 0;
+					tt = 0;
+					t = 1;
+					//break;
+															}	
+else{
+ tt = 2;
+	t = 7;
+	//SB4_push = 1;
+}
+		
+		
+		
+		
+		
+		/*else
+    {
+			//t = 7;		
+  tt = 2;
+	t = 7;
+							if (SB4_push == 1) {
+					SB4_push = 0;
+					tt = 0;
+					t = 1;
+					//break;
+															}
+    }*/
+	
+	}	
 }
 //----------------------------------------------------------
 unsigned char RTC_ConvertFromDecd(unsigned char c,unsigned char v){//
@@ -151,7 +194,7 @@ i2c_start ();//отправка посылки СТАРТ
 }
 //-----------------------обработка нажатия кнопки (изменение значения)---------- 
 void button (unsigned char u,unsigned char i){
-  unsigned int butcount=0;
+  unsigned int butcount = 0;
   while((GPIOC->IDR & (1 << 5)) == 0 )
   { 
     if(butcount < 1000)//Пауза для подавления дребезга
@@ -251,8 +294,10 @@ void clk_out (void){//
     }   
     }  
 //----------Первое нажатие настройка будильника 1-----
-	if (t == 1){
+	if (tt == 2){
 		SB4_push = 0;
+		button_push_detection();
+		
 alarm_on();//			
 button(min_alar,2);//вызов настройки минут будильника
         LCD_SetPos(0,0);
@@ -284,31 +329,13 @@ segment_clear (4);//очистка сегмента
 //*address_4 = alarm_4;//записываем переменную по адресу ПЗУ
 }
 
-while((GPIOC->IDR & (1 << 7)) == 0 )//проверяем, нажата ли кнопка переключения на настройку часа будилника
-  { 
- if(butcount < 1000)//Пауза для подавления дребезга
-    {
-      butcount++;
-    }
-    else
-    {
-			//t = 7;		
-  
-			if (SB4_push == 1) {
-					SB4_push = 0;
-					tt = 0;
-					t = 1;
-													}
-													else{
-														tt = 2;
-															}
-    }   
-	}
+
+button_push_detection();
 
 
-
-if (tt == 2){
+if (t == 1){
 	SB4_push = 1;
+	button_push_detection();
 	//while((GPIOC->IDR & (1 << 6)) == 0 ) {
 		//tt = 0;
 	//t = 1;		
@@ -329,11 +356,12 @@ segment_clear (2);//очистка сегмента
 				segment_clear (4);//очистка сегмента
 							LCD_SetPos(15,0);
 			sendbyte(alarm_number,1);
-			SB4_push = 1;
+			//SB4_push = 1;
 //РАССКОМЕНТИРОВАТЬ ПОСЛЕ НАЛАДКИ				
 //*address_1 = alarm_1;//записываем переменную по адресу ПЗУ
 //*address_2 = alarm_2;//записываем переменную по адресу ПЗУ
 }
+
 //--------------Второе нажатие настройка будильника 2-------
 	if (t == 2){
 alarm_on();			
